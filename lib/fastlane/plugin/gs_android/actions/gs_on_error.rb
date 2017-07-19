@@ -58,3 +58,6 @@ module Fastlane
 
         [:android,].include?(platform)
       end
+    end
+  end
+end
