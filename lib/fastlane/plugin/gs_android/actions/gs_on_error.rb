@@ -2,20 +2,20 @@ module Fastlane
   module Actions
     class GsOnErrorAction < Action
       def self.run(params)
-      	ENV = params[:ENV]
+      	env = params[:ENV]
       
-      	text = FileHelper.read(ENV["build_gradle_file_path"])
+      	text = FileHelper.read(env["build_gradle_file_path"])
 		version_name = text.match(/currentVersionName = '(.*)'/)[1]
 		if params[:lane] == :release
-		 versionsFileText = File.read("../../../versionsFiles/versions" + ENV['versionsFilePostfix'] + ".txt")
+		 versionsFileText = File.read("../../../versionsFiles/versions" + env['versionsFilePostfix'] + ".txt")
 		 version_name = versionsFileText.match("releaseVersionName = '(\\d+\\.\\d+\\.?\\d*)'")[1]
 		end
 
-		message = ENV["project_name"] + " " + version_name + " build has failed. Reason:\n" + params[:exception].message
+		message = env["project_name"] + " " + version_name + " build has failed. Reason:\n" + params[:exception].message
 
 		UI.important(message)
 
-		sendJobState(ENV['alias'], params[:lane], 'failed', message)
+		sendJobState(env['alias'], params[:lane], 'failed', message)
       end
 
       def self.description

@@ -3,15 +3,15 @@ module Fastlane
     class GsReleaseAction < Action
       def self.run(params)
       
-      	ENV = params[:ENV]
+      	env = params[:ENV]
       	
-        versionsFileText = File.read("../../../versionsFiles/versions" + ENV['versionsFilePostfix'] + ".txt")
+        versionsFileText = File.read("../../../versionsFiles/versions" + env['versionsFilePostfix'] + ".txt")
 		version_name = versionsFileText.match("rcVersionName = '(\\d+.\\d+)\\(\\d+\\)'")[1]
 		
-	  	updateChangelogOnGooglePlay(ENV['alias'], ENV['app_id'], version_name, 'beta', ENV['locales'], ENV['json_key_file'])
+	  	updateChangelogOnGooglePlay(env['alias'], env['app_id'], version_name, 'beta', env['locales'], env['json_key_file'])
 	  	
 		supply(track: "beta", track_promote_to: "production", skip_upload_apk: true, skip_upload_metadata: true, skip_upload_images: true, skip_upload_screenshots: true)    
-		Helper::GsAndroidHelper.gradleWithParam("saveReleaseVersionName", "versionsFilePostfix": ENV["versionsFilePostfix"])
+		Helper::GsAndroidHelper.gradleWithParam("saveReleaseVersionName", "versionsFilePostfix": env["versionsFilePostfix"])
       end
 
       def self.description

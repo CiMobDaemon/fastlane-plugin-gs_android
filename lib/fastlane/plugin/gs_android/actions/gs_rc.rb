@@ -3,26 +3,26 @@ module Fastlane
     class GsRcAction < Action
       def self.run(params)
       
-      	ENV = params[:ENV]
+      	env = params[:ENV]
       	
-        Helper::GsAndroidHelper.gradleWithParam("incrementVersionCode", "versionsFilePostfix": ENV["versionsFilePostfix"])
-		Helper::GsAndroidHelper.gradleWithParam("incrementRcVersionName", "versionsFilePostfix": ENV["versionsFilePostfix"])
+        Helper::GsAndroidHelper.gradleWithParam("incrementVersionCode", "versionsFilePostfix": env["versionsFilePostfix"])
+		Helper::GsAndroidHelper.gradleWithParam("incrementRcVersionName", "versionsFilePostfix": env["versionsFilePostfix"])
 		text = Helper::FileHelper.read(build_gradle_file_path)
 		version_name = text.match(/currentVersionName = '(.*)'/)[1]
 		version_code = text.match(/versionCode (.*)/)[1]
 		
-		loadChangelog(ENV['alias'], version_name, version_code, ENV['locales'], ENV["version_code_prefix"])
+		loadChangelog(env['alias'], version_name, version_code, env['locales'], env["version_code_prefix"])
 
 		gradle(task: "clean")
 
-		unless ENV["flavor"].nil?
-		     gradle(task: "assemble", flavor: ENV["flavor"], build_type: "Release")
+		unless env["flavor"].nil?
+		     gradle(task: "assemble", flavor: env["flavor"], build_type: "Release")
 		else
 		     gradle(task: "assemble", build_type: "Release")
 		end
 	
 		#specially for MapMobile
-		versionsFileText = File.read("../../../versionsFiles/versions#{ENV['versionsFilePostfix']}.txt")
+		versionsFileText = File.read("../../../versionsFiles/versions#{env['versionsFilePostfix']}.txt")
 
 		obbMainFileVersionSearch = versionsFileText.match("mainObbFileVersion = (\\d+)")
 		obbPatchFileVersionSearch = versionsFileText.match("patchObbFileVersion = (\\d+)")
@@ -33,7 +33,7 @@ module Fastlane
 
 		  #should check if new .obb files appeared (because Fastlane would do the same 12.07.2017)
 		  apkFilePath = File.dirname(build_gradle_file_path) + '/build/outputs/apk/'
-		  obbFilePath = "../../../obbFiles/#{ENV['versionsFilePostfix']}/"
+		  obbFilePath = "../../../obbFiles/#{env['versionsFilePostfix']}/"
 
 		  search = File.join(obbFilePath, '*.obb')
 		  paths = Dir.glob(search, File::FNM_CASEFOLD)
@@ -75,14 +75,14 @@ module Fastlane
 		  end
 
 		  #saving should be here
-		  Helper::GsAndroidHelper.gradleWithParam("saveObbFileInfo", "versionsFilePostfix": ENV["versionsFilePostfix"], "obbType": "main", "obbVersion": obbMainFileVersion.to_s, "obbSize": obbMainFileSize.to_s)
-		  Helper::GsAndroidHelper.gradleWithParam("saveObbFileInfo", "versionsFilePostfix": ENV["versionsFilePostfix"], "obbType": "patch", "obbVersion": obbPatchFileVersion.to_s, "obbSize": obbPatchFileSize.to_s)
+		  Helper::GsAndroidHelper.gradleWithParam("saveObbFileInfo", "versionsFilePostfix": env["versionsFilePostfix"], "obbType": "main", "obbVersion": obbMainFileVersion.to_s, "obbSize": obbMainFileSize.to_s)
+		  Helper::GsAndroidHelper.gradleWithParam("saveObbFileInfo", "versionsFilePostfix": env["versionsFilePostfix"], "obbType": "patch", "obbVersion": obbPatchFileVersion.to_s, "obbSize": obbPatchFileSize.to_s)
 		else
 		  supply(track: "beta", skip_upload_metadata: true, skip_upload_images: true, skip_upload_screenshots: true)
 		end
 
-		Helper::GsAndroidHelper.gradleWithParam("saveVersionCode", "versionsFilePostfix": ENV["versionsFilePostfix"])
-		Helper::GsAndroidHelper.gradleWithParam("saveRcVersionName", "versionsFilePostfix": ENV["versionsFilePostfix"])
+		Helper::GsAndroidHelper.gradleWithParam("saveVersionCode", "versionsFilePostfix": env["versionsFilePostfix"])
+		Helper::GsAndroidHelper.gradleWithParam("saveRcVersionName", "versionsFilePostfix": env["versionsFilePostfix"])
       end
 
       def self.description

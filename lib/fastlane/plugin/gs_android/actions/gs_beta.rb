@@ -3,19 +3,19 @@ module Fastlane
     class GsBetaAction < Action
       def self.run(params)
       
-      	ENV = params[:ENV]
+      	env = params[:ENV]
       	
         # Increment the build number (not the version number)
-		gradleWithParam("incrementVersionCode", "versionsFilePostfix": ENV["versionsFilePostfix"])
-		gradleWithParam("incrementBetaVersionName", "versionsFilePostfix": ENV["versionsFilePostfix"])
-		text = Helper::FileHelper.read(ENV['build_gradle_file_path'])
+		gradleWithParam("incrementVersionCode", "versionsFilePostfix": env["versionsFilePostfix"])
+		gradleWithParam("incrementBetaVersionName", "versionsFilePostfix": env["versionsFilePostfix"])
+		text = Helper::FileHelper.read(env['build_gradle_file_path'])
 		version_name = text.match(/currentVersionName = '(.*)'/)[1]
 
-		generateReleaseNotes("fileBeta", ENV['alias'], version_name, "Ru")
-		generateReleaseNotes("fileBeta", ENV['alias'], version_name, "En")
+		generateReleaseNotes("fileBeta", env['alias'], version_name, "Ru")
+		generateReleaseNotes("fileBeta", env['alias'], version_name, "En")
 
-		ruText = Helper::FileHelper.read(Dir.pwd + "/../../../notes/" + ENV['alias'] + "/" + version_name + "_Ru.txt")
-		enText = Helper::FileHelper.read(Dir.pwd + "/../../../notes/" + ENV['alias'] + "/" + version_name + "_En.txt")
+		ruText = Helper::FileHelper.read(Dir.pwd + "/../../../notes/" + env['alias'] + "/" + version_name + "_Ru.txt")
+		enText = Helper::FileHelper.read(Dir.pwd + "/../../../notes/" + env['alias'] + "/" + version_name + "_En.txt")
 
 		require 'date'
 		current_time = DateTime.now
@@ -28,12 +28,12 @@ module Fastlane
 		#Some applications have different apk types. We need only universal (if it exists) apk on crashlytics
 		buildType = "Beta"
 
-		unless ENV["apkType"].nil?
-		      buildType = ENV["apkType"] + buildType
+		unless env["apkType"].nil?
+		      buildType = env["apkType"] + buildType
 		end
 
-		unless ENV["flavor"].nil?
-		     gradle(task: "assemble", flavor: ENV["flavor"], build_type: buildType)
+		unless env["flavor"].nil?
+		     gradle(task: "assemble", flavor: env["flavor"], build_type: buildType)
 		else
 		     gradle(task: "assemble", build_type: buildType)
 		end
@@ -43,8 +43,8 @@ module Fastlane
 		   groups: params[:test_group_for_fabric]
 		)
 
-		Helper::GsAndroidHelper.gradleWithParam("saveVersionCode", "versionsFilePostfix": ENV["versionsFilePostfix"])
-		Helper::GsAndroidHelper.gradleWithParam("saveBetaVersionName", "versionsFilePostfix": ENV["versionsFilePostfix"])
+		Helper::GsAndroidHelper.gradleWithParam("saveVersionCode", "versionsFilePostfix": env["versionsFilePostfix"])
+		Helper::GsAndroidHelper.gradleWithParam("saveBetaVersionName", "versionsFilePostfix": env["versionsFilePostfix"])
       end
 
       def self.description
