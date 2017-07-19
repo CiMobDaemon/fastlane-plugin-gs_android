@@ -66,7 +66,7 @@ module Fastlane
           FastlaneCore::ConfigItem.new(key: :lane,
           description: "Fatlane lane",
           optional: false,
-          type: String)
+          type: Symbol)
         ]
       end
 

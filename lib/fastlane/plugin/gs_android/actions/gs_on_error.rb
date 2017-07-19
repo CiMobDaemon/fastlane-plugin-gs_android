@@ -43,7 +43,7 @@ module Fastlane
           FastlaneCore::ConfigItem.new(key: :lane,
           description: "Fatlane lane",
           optional: false,
-          type: String),
+          type: Symbol),
           
           FastlaneCore::ConfigItem.new(key: :exception,
           description: "Fatlane exception",
