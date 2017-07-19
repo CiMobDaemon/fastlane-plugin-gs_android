@@ -8,7 +8,7 @@ module Fastlane
         # Increment the build number (not the version number)
 		gradleWithParam("incrementVersionCode", "versionsFilePostfix": ENV["versionsFilePostfix"])
 		gradleWithParam("incrementBetaVersionName", "versionsFilePostfix": ENV["versionsFilePostfix"])
-		text = Helper::FileHelper.read(params[:build_gradle_file_path])
+		text = Helper::FileHelper.read(ENV['build_gradle_file_path'])
 		version_name = text.match(/currentVersionName = '(.*)'/)[1]
 
 		generateReleaseNotes("fileBeta", ENV['alias'], version_name, "Ru")
