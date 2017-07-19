@@ -6,8 +6,8 @@ module Fastlane
       	env = params[:ENV]
       	
         # Increment the build number (not the version number)
-		gradleWithParam("incrementVersionCode", "versionsFilePostfix": env["versionsFilePostfix"])
-		gradleWithParam("incrementBetaVersionName", "versionsFilePostfix": env["versionsFilePostfix"])
+		Helper::GsAndroidHelper.gradleWithParam("incrementVersionCode", "versionsFilePostfix": env["versionsFilePostfix"])
+		Helper::GsAndroidHelper.gradleWithParam("incrementBetaVersionName", "versionsFilePostfix": env["versionsFilePostfix"])
 		text = Helper::FileHelper.read(env['build_gradle_file_path'])
 		version_name = text.match(/currentVersionName = '(.*)'/)[1]
 

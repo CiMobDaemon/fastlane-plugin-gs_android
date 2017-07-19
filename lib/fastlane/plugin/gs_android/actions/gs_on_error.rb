@@ -48,7 +48,7 @@ module Fastlane
           FastlaneCore::ConfigItem.new(key: :exception,
           description: "Fatlane exception",
           optional: false,
-          type: Exception)
+          type: FastlaneCore::Interface::FastlaneError)
         ]
       end
 
