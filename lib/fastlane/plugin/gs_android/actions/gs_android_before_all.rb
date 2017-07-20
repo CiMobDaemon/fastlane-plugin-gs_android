@@ -1,6 +1,6 @@
 module Fastlane
   module Actions
-    class GsBeforeAllAction < Action
+    class GsAndroidBeforeAllAction < Action
       def self.run(params)
       	env = params[:ENV]
       

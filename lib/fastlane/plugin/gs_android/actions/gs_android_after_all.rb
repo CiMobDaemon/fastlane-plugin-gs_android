@@ -1,6 +1,6 @@
 module Fastlane
   module Actions
-    class GsAfterAllAction < Action
+    class GsAndroidAfterAllAction < Action
       def self.run(params)
       	env = params[:ENV]
       

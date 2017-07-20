@@ -1,6 +1,6 @@
 module Fastlane
   module Actions
-    class GsOnErrorAction < Action
+    class GsAndroidOnErrorAction < Action
       def self.run(params)
       	env = params[:ENV]
       	exception = params[:exception]
