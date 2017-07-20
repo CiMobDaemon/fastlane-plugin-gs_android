@@ -16,7 +16,7 @@ module Fastlane
 
 		UI.important(message)
 
-		Helper::GsAndroidHelper.sendJobState(env['alias'], params[:lane], 'failed', message)
+		Helper::GsAndroidHelper.send_job_state(env['alias'], params[:lane], 'failed', message)
       end
 
       def self.description

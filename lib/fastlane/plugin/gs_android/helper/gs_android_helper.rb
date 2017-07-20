@@ -9,7 +9,8 @@ module Fastlane
         args.each do |paramName, paramValue|
 		  task = "-P#{paramName}=#{paramValue} #{task}"
 		end
-		gradle(task: task)
+		UI.message("-------Task-------\n#{task}")
+		Actions::GradleAction.run(task: task)
       end
       
       #send job state https://forge.gradoservice.ru/projects/botback/wiki/Rest#jobStates
