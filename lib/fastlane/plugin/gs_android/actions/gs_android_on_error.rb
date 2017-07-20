@@ -5,7 +5,7 @@ module Fastlane
       	env = params[:ENV]
       	exception = params[:exception]
       
-      	text = FileHelper.read(env["build_gradle_file_path"])
+      	text = Helper::FileHelper.read(env["build_gradle_file_path"])
 		version_name = text.match(/currentVersionName = '(.*)'/)[1]
 		if params[:lane] == :release
 		 versionsFileText = File.read("../../../versionsFiles/versions" + env['versionsFilePostfix'] + ".txt")
