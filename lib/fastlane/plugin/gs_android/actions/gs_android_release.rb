@@ -11,7 +11,7 @@ module Fastlane
 	  	updateChangelogOnGooglePlay(env['alias'], env['app_id'], version_name, 'beta', env['locales'], env['json_key_file'])
 	  	
 		supply(track: "beta", track_promote_to: "production", skip_upload_apk: true, skip_upload_metadata: true, skip_upload_images: true, skip_upload_screenshots: true)    
-		Helper::GsAndroidHelper.gradleWithParam("saveReleaseVersionName", "versionsFilePostfix": env["versionsFilePostfix"])
+		Helper::GsAndroidHelper.gradle_with_params("saveReleaseVersionName", "versionsFilePostfix": env["versionsFilePostfix"])
       end
 
       def self.description

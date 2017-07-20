@@ -6,8 +6,8 @@ module Fastlane
       	env = params[:ENV]
       	
         # Increment the build number (not the version number)
-		Helper::GsAndroidHelper.gradleWithParam("incrementVersionCode", "versionsFilePostfix": env["versionsFilePostfix"])
-		Helper::GsAndroidHelper.gradleWithParam("incrementBetaVersionName", "versionsFilePostfix": env["versionsFilePostfix"])
+		Helper::GsAndroidHelper.gradle_with_params("incrementVersionCode", "versionsFilePostfix": env["versionsFilePostfix"])
+		Helper::GsAndroidHelper.gradle_with_params("incrementBetaVersionName", "versionsFilePostfix": env["versionsFilePostfix"])
 		text = Helper::FileHelper.read(env['build_gradle_file_path'])
 		version_name = text.match(/currentVersionName = '(.*)'/)[1]
 
@@ -43,8 +43,8 @@ module Fastlane
 		   groups: params[:test_group_for_fabric]
 		)
 
-		Helper::GsAndroidHelper.gradleWithParam("saveVersionCode", "versionsFilePostfix": env["versionsFilePostfix"])
-		Helper::GsAndroidHelper.gradleWithParam("saveBetaVersionName", "versionsFilePostfix": env["versionsFilePostfix"])
+		Helper::GsAndroidHelper.gradle_with_params("saveVersionCode", "versionsFilePostfix": env["versionsFilePostfix"])
+		Helper::GsAndroidHelper.gradle_with_params("saveBetaVersionName", "versionsFilePostfix": env["versionsFilePostfix"])
       end
 
       def self.description

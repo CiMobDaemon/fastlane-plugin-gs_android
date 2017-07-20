@@ -5,8 +5,8 @@ module Fastlane
       
       	env = params[:ENV]
       	
-        Helper::GsAndroidHelper.gradleWithParam("incrementVersionCode", "versionsFilePostfix": env["versionsFilePostfix"])
-		Helper::GsAndroidHelper.gradleWithParam("incrementRcVersionName", "versionsFilePostfix": env["versionsFilePostfix"])
+        Helper::GsAndroidHelper.gradle_with_params("incrementVersionCode", "versionsFilePostfix": env["versionsFilePostfix"])
+		Helper::GsAndroidHelper.gradle_with_params("incrementRcVersionName", "versionsFilePostfix": env["versionsFilePostfix"])
 		text = Helper::FileHelper.read(build_gradle_file_path)
 		version_name = text.match(/currentVersionName = '(.*)'/)[1]
 		version_code = text.match(/versionCode (.*)/)[1]
@@ -75,14 +75,14 @@ module Fastlane
 		  end
 
 		  #saving should be here
-		  Helper::GsAndroidHelper.gradleWithParam("saveObbFileInfo", "versionsFilePostfix": env["versionsFilePostfix"], "obbType": "main", "obbVersion": obbMainFileVersion.to_s, "obbSize": obbMainFileSize.to_s)
-		  Helper::GsAndroidHelper.gradleWithParam("saveObbFileInfo", "versionsFilePostfix": env["versionsFilePostfix"], "obbType": "patch", "obbVersion": obbPatchFileVersion.to_s, "obbSize": obbPatchFileSize.to_s)
+		  Helper::GsAndroidHelper.gradle_with_params("saveObbFileInfo", "versionsFilePostfix": env["versionsFilePostfix"], "obbType": "main", "obbVersion": obbMainFileVersion.to_s, "obbSize": obbMainFileSize.to_s)
+		  Helper::GsAndroidHelper.gradle_with_params("saveObbFileInfo", "versionsFilePostfix": env["versionsFilePostfix"], "obbType": "patch", "obbVersion": obbPatchFileVersion.to_s, "obbSize": obbPatchFileSize.to_s)
 		else
 		  supply(track: "beta", skip_upload_metadata: true, skip_upload_images: true, skip_upload_screenshots: true)
 		end
 
-		Helper::GsAndroidHelper.gradleWithParam("saveVersionCode", "versionsFilePostfix": env["versionsFilePostfix"])
-		Helper::GsAndroidHelper.gradleWithParam("saveRcVersionName", "versionsFilePostfix": env["versionsFilePostfix"])
+		Helper::GsAndroidHelper.gradle_with_params("saveVersionCode", "versionsFilePostfix": env["versionsFilePostfix"])
+		Helper::GsAndroidHelper.gradle_with_params("saveRcVersionName", "versionsFilePostfix": env["versionsFilePostfix"])
       end
 
       def self.description

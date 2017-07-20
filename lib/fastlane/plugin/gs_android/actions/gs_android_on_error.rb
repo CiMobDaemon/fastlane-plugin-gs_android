@@ -3,6 +3,7 @@ module Fastlane
     class GsOnErrorAction < Action
       def self.run(params)
       	env = params[:ENV]
+      	exception = params[:exception]
       
       	text = FileHelper.read(env["build_gradle_file_path"])
 		version_name = text.match(/currentVersionName = '(.*)'/)[1]
@@ -46,9 +47,9 @@ module Fastlane
           type: Symbol),
           
           FastlaneCore::ConfigItem.new(key: :exception,
-          description: "Fatlane exception",
+          description: "Exception",
           optional: false,
-          type: FastlaneCore::Interface::FastlaneError)
+          type: Object)
         ]
       end
 
