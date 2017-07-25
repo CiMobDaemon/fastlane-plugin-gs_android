@@ -2,16 +2,14 @@ module Fastlane
   module Actions
     class GsAndroidReleaseAction < Action
       def self.run(params)
-      
-      	env = params[:ENV]
-      	
-        versionsFileText = File.read("../../../versionsFiles/versions" + env['versionsFilePostfix'] + ".txt")
-		version_name = versionsFileText.match("rcVersionName = '(\\d+.\\d+)\\(\\d+\\)'")[1]
-		
-	  	updateChangelogOnGooglePlay(env['alias'], env['app_id'], version_name, 'beta', env['locales'], env['json_key_file'])
-	  	
-		supply(track: "beta", track_promote_to: "production", skip_upload_apk: true, skip_upload_metadata: true, skip_upload_images: true, skip_upload_screenshots: true)    
-		Helper::GsAndroidHelper.gradle_with_params("saveReleaseVersionName", "versionsFilePostfix": env["versionsFilePostfix"])
+        env = params[:ENV]
+        version_name = Helper::VersionParser.getRcVersionName(env['versionsFilePostfix']) # TODO: it will be better to parse it from GP
+
+        Helper::GooglePlayLoader.update_changelog(env['alias'], env['app_id'], version_name, 'beta', env['locales'], env['json_key_file'])
+
+        supply(track: "beta", track_promote_to: "production", skip_upload_apk: true, skip_upload_metadata: true, skip_upload_images: true, skip_upload_screenshots: true)
+        #Helper::GsAndroidHelper.gradle_with_params("saveReleaseVersionName", "versionsFilePostfix": env["versionsFilePostfix"])
+        Helper::VersionWorker.saveReleaseVersionName(env["versionsFilePostfix"])
       end
 
       def self.description

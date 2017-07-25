@@ -2,21 +2,19 @@ module Fastlane
   module Actions
     class GsAndroidOnErrorAction < Action
       def self.run(params)
-      	env = params[:ENV]
-      	exception = params[:exception]
-      
-      	text = Helper::FileHelper.read(env["build_gradle_file_path"])
-		version_name = text.match(/currentVersionName = '(.*)'/)[1]
-		if params[:lane] == :release
-		 versionsFileText = File.read("../../../versionsFiles/versions" + env['versionsFilePostfix'] + ".txt")
-		 version_name = versionsFileText.match("releaseVersionName = '(\\d+\\.\\d+\\.?\\d*)'")[1]
-		end
+        env = params[:ENV]
+        exception = params[:exception]
+        if params[:lane] == :release
+          version_name = Helper::VersionParser.getReleaseVersionName(env['versionsFilePostfix'])
+        else
+          version_name = Helper::VersionParser.getCurrentVersionName(env['build_gradle_file_path'])
+        end
 
-		message = env["project_name"] + " " + version_name + " build has failed. Reason:\n" + params[:exception].message
+        message = "#{env['project_name']} #{version_name} build has failed. Reason:\n#{exception.message}"
 
-		UI.important(message)
+        UI.important(message)
 
-		Helper::GsAndroidHelper.send_job_state(env['alias'], params[:lane], 'failed', message)
+        Helper::GsAndroidHelper.send_job_state(env['alias'], params[:lane], 'failed', message)
       end
 
       def self.description
@@ -49,7 +47,7 @@ module Fastlane
           FastlaneCore::ConfigItem.new(key: :exception,
           description: "Exception",
           optional: false,
-          type: Object)
+          type: Object) # TODO: change the type
         ]
       end
 
