@@ -44,10 +44,12 @@ module Fastlane
 				else
 					 raise 'Language is required for release notes generating.'
 				end
-				gs_get_release_notes(cmd: cmnd,
-					 lang: lang,
-					 alias: project_alias,
-					 displayVersionName: version)
+				require 'fastlane/plugin/gs_deliver'
+				configuration = FastlaneCore::Configuration.create(Actions::GsGetReleaseNotesAction.available_options, {cmd: cmnd,
+																																																lang: lang,
+																																																alias: project_alias,
+																																																displayVersionName: version})
+				Actions::GsGetReleaseNotesAction.run(configuration)
 				UI.message("Check exist #{Dir.pwd}/../../../notes/#{project_alias}/#{version}_#{lang}.txt")
 				unless File.exist?("#{Dir.pwd}/../../../notes/#{project_alias}/#{version}_#{lang}.txt")
 						raise 'Не удалось сгенерировать ReleaseNotes'
