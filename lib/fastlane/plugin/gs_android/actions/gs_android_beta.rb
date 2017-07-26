@@ -2,20 +2,17 @@ module Fastlane
   module Actions
     class GsAndroidBetaAction < Action
       def self.run(params)
-      
-      	env = params[:ENV]
-      	
         # Increment the build number (not the version number)
-				#Helper::GsAndroidHelper.gradle_with_params("incrementVersionCode", "versionsFilePostfix": env["versionsFilePostfix"])
-				#Helper::GsAndroidHelper.gradle_with_params("incrementBetaVersionName", "versionsFilePostfix": env["versionsFilePostfix"])
-				Helper::VersionWorker.incrementVersionCode(env["versionsFilePostfix"], env["build_gradle_file_path"])
-				version_name = Helper::VersionWorker.incrementBetaVersionName(env["versionsFilePostfix"], env["build_gradle_file_path"], env["general_major_version"])
+				#Helper::GsAndroidHelper.gradle_with_params("incrementVersionCode", "versionsFilePostfix": ENV["versionsFilePostfix"])
+				#Helper::GsAndroidHelper.gradle_with_params("incrementBetaVersionName", "versionsFilePostfix": ENV["versionsFilePostfix"])
+				Helper::VersionWorker.incrementVersionCode(ENV["versionsFilePostfix"], ENV["build_gradle_file_path"])
+				version_name = Helper::VersionWorker.incrementBetaVersionName(ENV["versionsFilePostfix"], ENV["build_gradle_file_path"], ENV["general_major_version"])
 
-				generateReleaseNotes("fileBeta", env['alias'], version_name, "Ru")
-				generateReleaseNotes("fileBeta", env['alias'], version_name, "En")
+				Helper::GsAndroidHelper.generate_release_notes("fileBeta", ENV['alias'], version_name, "Ru")
+				Helper::GsAndroidHelper.generate_release_notes("fileBeta", ENV['alias'], version_name, "En")
 
-				ruText = Helper::FileHelper.read(Dir.pwd + "/../../../notes/" + env['alias'] + "/" + version_name + "_Ru.txt")
-				enText = Helper::FileHelper.read(Dir.pwd + "/../../../notes/" + env['alias'] + "/" + version_name + "_En.txt")
+				ruText = Helper::FileHelper.read(Dir.pwd + "/../../../notes/" + ENV['alias'] + "/" + version_name + "_Ru.txt")
+				enText = Helper::FileHelper.read(Dir.pwd + "/../../../notes/" + ENV['alias'] + "/" + version_name + "_En.txt")
 
 				require 'date'
 				current_time = DateTime.now
@@ -28,12 +25,12 @@ module Fastlane
 				#Some applications have different apk types. We need only universal (if it exists) apk on crashlytics
 				buildType = "Beta"
 
-				unless env["apkType"].nil?
-							buildType = env["apkType"] + buildType
+				unless ENV["apkType"].nil?
+							buildType = ENV["apkType"] + buildType
 				end
 
-				unless env["flavor"].nil?
-						 gradle(task: "assemble", flavor: env["flavor"], build_type: buildType)
+				unless ENV["flavor"].nil?
+						 gradle(task: "assemble", flavor: ENV["flavor"], build_type: buildType)
 				else
 						 gradle(task: "assemble", build_type: buildType)
 				end
@@ -43,10 +40,10 @@ module Fastlane
 					 groups: params[:test_group_for_fabric]
 				)
 
-				#Helper::GsAndroidHelper.gradle_with_params("saveVersionCode", "versionsFilePostfix": env["versionsFilePostfix"])
-				#Helper::GsAndroidHelper.gradle_with_params("saveBetaVersionName", "versionsFilePostfix": env["versionsFilePostfix"])
-				Helper::VersionWorker.saveVersionCode(env["versionsFilePostfix"], env["build_gradle_file_path"])
-				Helper::VersionWorker.saveBetaVersionName(env["versionsFilePostfix"], env["build_gradle_file_path"])
+				#Helper::GsAndroidHelper.gradle_with_params("saveVersionCode", "versionsFilePostfix": ENV["versionsFilePostfix"])
+				#Helper::GsAndroidHelper.gradle_with_params("saveBetaVersionName", "versionsFilePostfix": ENV["versionsFilePostfix"])
+				Helper::VersionWorker.saveVersionCode(ENV["versionsFilePostfix"], ENV["build_gradle_file_path"])
+				Helper::VersionWorker.saveBetaVersionName(ENV["versionsFilePostfix"], ENV["build_gradle_file_path"])
       end
 
       def self.description
@@ -65,12 +62,7 @@ module Fastlane
       end
 
       def self.available_options
-        [          
-          FastlaneCore::ConfigItem.new(key: :ENV,
-          description: "Fatlane enviroment",
-          optional: false,
-          type: Hash)
-        ]
+        []
       end
 
       def self.is_supported?(platform)

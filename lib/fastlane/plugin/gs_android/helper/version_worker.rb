@@ -4,7 +4,7 @@ module Fastlane
       VERSION_FILES_PATH_TEMPLATE = "../../versionsFiles/versions%{postfix}.txt"
 
       def self.incrementVersionCode(versions_file_postfix, build_gradle_path)
-        UI.message(":incrementVersionCode - Incrementing Version Code...")
+        UI.message(':incrementVersionCode - Incrementing Version Code...')
         version_code = VersionParser.parseVersionCode(VERSION_FILES_PATH_TEMPLATE % {postfix: versions_file_postfix})
         UI.message(":incrementVersionCode - current versionCode = #{version_code}")
         version_code += 1
@@ -16,34 +16,29 @@ module Fastlane
       end
 
       def self.saveVersionCode(versions_file_postfix, build_gradle_path)
-        UI.message(":saveVersionCode - Saving Version Code...")
+        UI.message(':saveVersionCode - Saving Version Code...')
         version_code = FileHelper.read(build_gradle_path).match("versionCode (\\d+)")[1].to_i
         UI.message(":saveVersionCode - versionCode = #{version_code}")
         VersionParser.saveVersionCode(VERSION_FILES_PATH_TEMPLATE % {postfix: versions_file_postfix}, version_code)
       end
 
       def self.incrementBetaVersionName(versions_file_postfix, build_gradle_path, general_major_version)
-        UI.message(":incrementBetaVersionName - Incrementing Version Name...")
+        UI.message(':incrementBetaVersionName - Incrementing Version Name...')
         beta_version_name = VersionParser.parseBetaVersion(VERSION_FILES_PATH_TEMPLATE % {postfix: versions_file_postfix})
         UI.message(":incrementBetaVersionName - current versionName = #{beta_version_name}")
-        if beta_version_name.major_version != general_major_version
-          beta_version_name.set_new_version(general_major_version, 0, 1)
-        else
-          rc_version_name = VersionParser.parseRcVersion(VERSION_FILES_PATH_TEMPLATE % {postfix: versions_file_postfix})
-          if beta_version_name.minor_version != rc_version_name.minor_version
-            beta_version_name.set_new_version(beta_version_name.major_version, rc_version_name.minor_version, 1)
-          else
-            beta_version_name.increment_patch_version
-          end
+        rc_version_name = VersionParser.parseRcVersion(VERSION_FILES_PATH_TEMPLATE % {postfix: versions_file_postfix})
+        if beta_version_name.major_version != rc_version_name.major_version || beta_version_name.minor_version != rc_version_name.minor_version
+          beta_version_name.set_new_version(rc_version_name.major_version, rc_version_name.minor_version, 0)
         end
+        beta_version_name.increment_patch_version
         UI.message(":incrementBetaVersionName - new versionName = #{beta_version_name}")
-        VersionParser.saveVersion(build_gradle_path, 'currentVersionName', beta_version_name)
+        VersionParser.saveGradleVersion(build_gradle_path, beta_version_name)
         return beta_version_name
       end
 
       def self.saveBetaVersionName(versions_file_postfix, build_gradle_path)
-        UI.message(":saveBetaVersionName - Saving Version Name...")
-        beta_version_name = VersionParser.parseVersion(build_gradle_path, 'currentVersionName')
+        UI.message(':saveBetaVersionName - Saving Version Name...')
+        beta_version_name = VersionParser.parseGradleVersion(build_gradle_path)
         UI.message(":saveBetaVersionName - versionName = #{beta_version_name}")
         VersionParser.saveBetaVersion(VERSION_FILES_PATH_TEMPLATE % {postfix: versions_file_postfix}, beta_version_name)
       end
@@ -53,7 +48,7 @@ module Fastlane
       end
 
       def self.incrementRcVersionName(versions_file_postfix, build_gradle_path, general_major_version)
-        UI.message(":incrementRcVersionName - Incrementing Version Name...")
+        UI.message(':incrementRcVersionName - Incrementing Version Name...')
         rc_version_name = VersionParser.parseRcVersion(VERSION_FILES_PATH_TEMPLATE % {postfix: versions_file_postfix})
         UI.message(":incrementRcVersionName - current versionName = #{rc_version_name}")
         if rc_version_name.major_version != general_major_version
@@ -65,13 +60,13 @@ module Fastlane
           end
         end
         UI.message(":incrementRcVersionName - new versionName = #{rc_version_name}")
-        VersionParser.saveVersion(build_gradle_path, 'currentVersionName', rc_version_name)
+        VersionParser.saveGradleVersion(build_gradle_path, rc_version_name)
         return rc_version_name
       end
 
       def self.saveRcVersionName(versions_file_postfix, build_gradle_path)
-        UI.message(":saveRcVersionName - Saving Version Name...")
-        rc_version_name = VersionParser.parseVersion(build_gradle_path, 'currentVersionName')
+        UI.message(':saveRcVersionName - Saving Version Name...')
+        rc_version_name = VersionParser.parseGradleVersion(build_gradle_path)
         UI.message(":saveRcVersionName - versionName = #{rc_version_name}")
         old_rc_version_name = VersionParser.parseRcVersion(VERSION_FILES_PATH_TEMPLATE % {postfix: versions_file_postfix})
         if rc_version_name.major_version == old_rc_version_name.major_version && rc_version_name.minor_version == old_rc_version_name.minor_version
@@ -86,8 +81,9 @@ module Fastlane
       end
 
       def self.saveReleaseVersionName(versions_file_postfix)
-        UI.message(":saveRcVersionName - Saving Version Name...")
+        UI.message(':saveRcVersionName - Saving Version Name...')
         rc_version_name = VersionParser.parseRcVersion(VERSION_FILES_PATH_TEMPLATE % {postfix: versions_file_postfix})
+        rc_version_name.build_number = nil
         UI.message(":saveRcVersionName - versionName = #{rc_version_name}")
         VersionParser.saveReleaseVersion(VERSION_FILES_PATH_TEMPLATE % {postfix: versions_file_postfix}, rc_version_name)
         rc_version_name.build_number = 0
@@ -95,7 +91,7 @@ module Fastlane
       end
 
       def self.getCurrentVersionName(build_gradle_path)
-        return VersionParser.parseVersion(build_gradle_path, 'currentVersionName')
+        return VersionParser.parseGradleVersion(build_gradle_path)
       end
 
       def self.saveMainObbFileInfo(versions_file_postfix, version, size)

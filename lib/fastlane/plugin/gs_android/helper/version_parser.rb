@@ -7,17 +7,20 @@ module Fastlane
       RC_VERSION_NAME = 'rcVersionName'
       RELEASE_VERSION_NAME = 'releaseVersionName'
 
+      GRADLE_VERSION_NAME = 'currentVersionName'
+
       OBB_MAIN_NAMES = {version: 'mainObbFileVersion', size: 'mainObbFileSize'}
       OBB_PATCH_NAMES = {version: 'patchObbFileVersion', size: 'patchObbFileSize'}
 
-      VERSION_TEMPLATE = "%{name} ?=? ?'?(\\d+).(\\d+).?(\\d*)\\((\\d*)\\)'?"
+      VERSION_TEMPLATE = "%{name} ?=? ?'?(\\d+).(\\d+).?(\\d*)\\(?(\\d*)\\)?'?"
 
       def self.parseVersion(path, version_name)
         versions_text = FileHelper.read(path.to_s)
         version = versions_text.match(VERSION_TEMPLATE % {name: version_name})
         if version.nil?
-          UI.important("Cannot find '#{version_name}' on #{path}")
-          return nil
+          message = "Cannot find '#{version_name}' on #{path}"
+          UI.important(message)
+          raise message
         else
           return ProjectVersion.new(version[1], version[2], version[3], version[4])
         end
@@ -33,6 +36,10 @@ module Fastlane
 
       def self.parseReleaseVersion(path)
         return self.parseVersion(path, RELEASE_VERSION_NAME)
+      end
+
+      def self.parseGradleVersion(build_gradle_path)
+        return self.parseVersion(build_gradle_path, GRADLE_VERSION_NAME)
       end
 
       def self.saveVersion(path, version_name, version)
@@ -55,6 +62,12 @@ module Fastlane
 
       def self.saveReleaseVersion(path, version)
         self.saveVersion(path, RELEASE_VERSION_NAME, version)
+      end
+
+      def self.saveGradleVersion(build_gradle_path, version)
+        v = version.dup.clone
+        v.build_number = nil
+        self.saveVersion(build_gradle_path, GRADLE_VERSION_NAME, v)
       end
 
       def self.parseVersionCode(path)

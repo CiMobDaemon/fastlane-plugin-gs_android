@@ -2,27 +2,27 @@ module Fastlane
   module Actions
     class GsAndroidOnErrorAction < Action
       def self.run(params)
-        env = params[:ENV]
         exception = params[:exception]
-        if params[:lane] == :release
-          version_name = Helper::VersionParser.getReleaseVersionName(env['versionsFilePostfix'])
-        else
-          version_name = Helper::VersionParser.getCurrentVersionName(env['build_gradle_file_path'])
+        begin
+          if params[:lane] == :release
+            version_name = Helper::VersionWorker.getReleaseVersionName(ENV['versionsFilePostfix']).to_s
+          else
+            version_name = Helper::VersionWorker.getCurrentVersionName(ENV['build_gradle_file_path']).to_s
+          end
+          message = "#{ENV['project_name']} #{version_name} build has failed. Reason:\n#{exception.message}"
+        rescue StandardError => error
+          message = "#{ENV['project_name']} build has failed. Reason:\n#{exception.message}\nError block has failed. Reason:\n#{error.message}"
         end
-
-        message = "#{env['project_name']} #{version_name} build has failed. Reason:\n#{exception.message}"
-
         UI.important(message)
-
-        Helper::GsAndroidHelper.send_job_state(env['alias'], params[:lane], 'failed', message)
+        Helper::GsAndroidHelper.send_job_state(ENV['alias'], params[:lane], 'failed', message)
       end
 
       def self.description
-        "Action is called to send information about errors"
+        'Action is called to send information about errors'
       end
 
       def self.authors
-        ["Dmitry Ulyanov"]
+        ['Dmitry Ulyanov']
       end
 
       def self.return_value
@@ -33,17 +33,12 @@ module Fastlane
       end
 
       def self.available_options
-        [          
-          FastlaneCore::ConfigItem.new(key: :ENV,
-          description: "Fatlane enviroment",
-          optional: false,
-          type: Hash),
-          
+        [
           FastlaneCore::ConfigItem.new(key: :lane,
           description: "Fatlane lane",
           optional: false,
           type: Symbol),
-          
+
           FastlaneCore::ConfigItem.new(key: :exception,
           description: "Exception",
           optional: false,

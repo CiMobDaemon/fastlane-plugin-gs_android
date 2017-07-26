@@ -2,12 +2,11 @@ module Fastlane
   module Actions
     class GsAndroidBeforeAllAction < Action
       def self.run(params)
-        env = params[:ENV]
         #create AppFile because Fastlane cannot work with different Appfiles
-        Helper::FileHelper.write(Dir.pwd + '/Appfile', "json_key_file \"#{env['json_key_file']}\"\npackage_name \"#{env['app_id']}\"")
-        unless env["metadata_dir"].nil?
+        Helper::FileHelper.write(Dir.pwd + '/Appfile', "json_key_file \"#{ENV['json_key_file']}\"\npackage_name \"#{ENV['app_id']}\"")
+        unless ENV["metadata_dir"].nil?
           system ("rm -rf metadata")
-          system ("mv #{env["metadata_dir"]} metadata")
+          system ("mv #{ENV["metadata_dir"]} metadata")
           UI.important("Use custom ITC metadata.")
         end
       end
@@ -28,12 +27,7 @@ module Fastlane
       end
 
       def self.available_options
-        [          
-          FastlaneCore::ConfigItem.new(key: :ENV,
-          description: "Fatlane enviroment",
-          optional: false,
-          type: Hash)
-        ]
+        []
       end
 
       def self.is_supported?(platform)

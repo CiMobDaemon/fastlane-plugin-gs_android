@@ -10,9 +10,9 @@ module Fastlane
 			end
 			
 			def to_s
-				return "#{self.major_version}.#{self.minor_version}" + self.patch_version.nil? ? "" : ".#{self.patch_version}" + self.build_number.nil? ? "" : "(#{self.patch_version})"
+				return "#{self.major_version}.#{self.minor_version}" + (self.patch_version.nil? ? '' : ".#{self.patch_version}") + (self.build_number.nil? ? '' : "(#{self.build_number})")
 			end
-			
+
 			def set_new_version(major_version, minor_version, patch_version = nil, build_number = nil)
 				self.major_version = major_version
 				self.minor_version = minor_version
@@ -36,5 +36,5 @@ module Fastlane
 				set_new_version(self.major_version, self.minor_version, self.patch_version, self.build_number.nil? ? 1 : self.build_number + 1)
 			end
 		end
-  	end
+	end
 end

@@ -2,51 +2,50 @@ module Fastlane
   module Actions
     class GsAndroidAfterAllAction < Action
       def self.run(params)
-				env = params[:ENV]
+        if params[:lane] == :release
+          version_name = Helper::VersionWorker.getReleaseVersionName(ENV['versionsFilePostfix']).to_s
+				else
+					version_name = Helper::VersionWorker.getCurrentVersionName(ENV['build_gradle_file_path']).to_s
+				end
 
-      	text = Helper::FileHelper.read(build_gradle_file_path)
-				version_name = text.match(/currentVersionName = '(.*)'/)[1]
-
-				cmd = ""
+				cmd = nil
 				options = {}
 				if params[:lane] == :beta
-					 cmd = "beta"
-					 options = {cmd:cmd,
-							displayVersionName:version_name,
-							request: "cmd",
-							alias: env["alias"]
+					 cmd = 'beta'
+					 options = {cmd: cmd,
+							displayVersionName: version_name,
+							request: 'cmd',
+							alias: ENV['alias']
 					 }
 				elsif params[:lane] == :rc
-					versionsFileText = File.read("../../../versionsFiles/versions" + env['versionsFilePostfix'] + ".txt")
-					buildNumber = versioghsnsFileText.match("rcVersionName = '\\d+.\\d+\\((\\d+)\\)'")[1]
-						cmd = "mv2rc"
-						options = {cmd:cmd,
-							 displayVersionName:version_name,
-							 request: "cmd",
-							 alias: env["alias"],
-							 buildNumber: buildNumber
+					build_number = Helper::VersionWorker.getRcVersionName(ENV['versionsFilePostfix']).build_number
+						cmd = 'mv2rc'
+						options = {cmd: cmd,
+							 displayVersionName: version_name,
+							 request: 'cmd',
+							 alias: ENV['alias'],
+							 buildNumber: build_number
 						}
 				elsif params[:lane] == :release
-						versionsFileText = File.read("../../../versionsFiles/versions" + env['versionsFilePostfix'] + ".txt")
-						cmd = "rc2release"
-						options = {cmd:cmd,
-							 displayVersionName:versionsFileText.match("releaseVersionName = '(\\d+\\.\\d+\\.?\\d*)'")[1],
-							 request: "cmd",
-							 alias: env["alias"]
+						cmd = 'rc2release'
+						options = {cmd: cmd,
+							 displayVersionName: version_name,
+							 request: 'cmd',
+							 alias: ENV['alias']
 						}
 				end
-				if cmd != ""
+				unless cmd.nil?
 					 gs_execute_command(options)
+					 Helper::GsAndroidHelper.sendJobState(ENV['alias'], params[:lane], 'successful')
 				end
-				Helper::GsAndroidHelper.sendJobState(env["alias"], params[:lane], 'successful')
       end
 
       def self.description
-        "Action is called to cal bot command and send information about success"
+        'Action is called to cal bot command and send information about success'
       end
 
       def self.authors
-        ["Dmitry Ulyanov"]
+        ['Dmitry Ulyanov']
       end
 
       def self.return_value
@@ -57,14 +56,9 @@ module Fastlane
       end
 
       def self.available_options
-        [          
-          FastlaneCore::ConfigItem.new(key: :ENV,
-          description: "Fatlane enviroment",
-          optional: false,
-          type: Hash),
-          
-          FastlaneCore::ConfigItem.new(key: :lane,
-          description: "Fatlane lane",
+        [
+					FastlaneCore::ConfigItem.new(key: :lane,
+          description: 'Fatlane lane',
           optional: false,
           type: Symbol)
         ]
