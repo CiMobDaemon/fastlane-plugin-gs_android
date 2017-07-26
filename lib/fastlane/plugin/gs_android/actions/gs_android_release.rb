@@ -2,7 +2,7 @@ module Fastlane
   module Actions
     class GsAndroidReleaseAction < Action
       def self.run(params)
-        version_name = Helper::VersionParser.getRcVersionName(ENV['versionsFilePostfix']) # TODO: it will be better to parse it from GP
+        version_name = Helper::VersionParser.getRcVersionName(ENV['versionsFilePostfix']).to_s # TODO: it will be better to parse it from GP
 
         Helper::GooglePlayLoader.update_changelog(ENV['alias'], ENV['app_id'], version_name, 'beta', ENV['locales'], ENV['json_key_file'])
 

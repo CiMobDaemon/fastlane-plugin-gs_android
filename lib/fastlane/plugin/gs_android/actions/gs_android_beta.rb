@@ -6,7 +6,7 @@ module Fastlane
 				#Helper::GsAndroidHelper.gradle_with_params("incrementVersionCode", "versionsFilePostfix": ENV["versionsFilePostfix"])
 				#Helper::GsAndroidHelper.gradle_with_params("incrementBetaVersionName", "versionsFilePostfix": ENV["versionsFilePostfix"])
 				Helper::VersionWorker.incrementVersionCode(ENV["versionsFilePostfix"], ENV["build_gradle_file_path"])
-				version_name = Helper::VersionWorker.incrementBetaVersionName(ENV["versionsFilePostfix"], ENV["build_gradle_file_path"], ENV["general_major_version"])
+				version_name = Helper::VersionWorker.incrementBetaVersionName(ENV["versionsFilePostfix"], ENV["build_gradle_file_path"], ENV["general_major_version"]).to_s
 
 				Helper::GsAndroidHelper.generate_release_notes("fileBeta", ENV['alias'], version_name, "Ru")
 				Helper::GsAndroidHelper.generate_release_notes("fileBeta", ENV['alias'], version_name, "En")

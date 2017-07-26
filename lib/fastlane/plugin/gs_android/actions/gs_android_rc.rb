@@ -4,8 +4,8 @@ module Fastlane
       def self.run(params)
         #Helper::GsAndroidHelper.gradle_with_params("incrementVersionCode", "versionsFilePostfix": ENV["versionsFilePostfix"])
 				#Helper::GsAndroidHelper.gradle_with_params("incrementRcVersionName", "versionsFilePostfix": ENV["versionsFilePostfix"])
-				version_code = Helper::VersionWorker.incrementVersionCode(ENV["versionsFilePostfix"], ENV["build_gradle_file_path"])
-				version_name = Helper::VersionWorker.incrementRcVersionName(ENV["versionsFilePostfix"], ENV["build_gradle_file_path"], ENV["general_major_version"].to_i)
+				version_code = Helper::VersionWorker.incrementVersionCode(ENV["versionsFilePostfix"], ENV["build_gradle_file_path"]).to_s
+				version_name = Helper::VersionWorker.incrementRcVersionName(ENV["versionsFilePostfix"], ENV["build_gradle_file_path"], ENV["general_major_version"].to_i).to_s
 
 				loadChangelog(ENV['alias'], version_name, version_code, ENV['locales'], ENV["version_code_prefix"])
 

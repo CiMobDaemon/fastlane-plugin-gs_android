@@ -61,6 +61,7 @@ module Fastlane
         end
         UI.message(":incrementRcVersionName - new versionName = #{rc_version_name}")
         VersionParser.saveGradleVersion(build_gradle_path, rc_version_name)
+        rc_version_name.build_number = nil # TODO: no pure
         return rc_version_name
       end
 
