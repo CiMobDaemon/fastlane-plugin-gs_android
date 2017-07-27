@@ -9,12 +9,12 @@ module Fastlane
 
 				loadChangelog(ENV['alias'], version_name, version_code, ENV['locales'], ENV["version_code_prefix"])
 
-				gradle(task: "clean")
+				Actions::GradleAction.run(task: "clean")
 
 				unless ENV["flavor"].nil?
-						 gradle(task: "assemble", flavor: ENV["flavor"], build_type: "Release")
+						 Actions::GradleAction.run(task: "assemble", flavor: ENV["flavor"], build_type: "Release")
 				else
-						 gradle(task: "assemble", build_type: "Release")
+						 Actions::GradleAction.run(task: "assemble", build_type: "Release")
 				end
 
 				#specially for MapMobile
@@ -26,7 +26,7 @@ module Fastlane
 
 					#should check if new .obb files appeared (because Fastlane would do the same 12.07.2017)
 					apk_file_path = File.dirname(build_gradle_file_path) + '/build/outputs/apk/'
-					obb_file_path = "../../../obbFiles/#{ENV['versionsFilePostfix']}/"
+					obb_file_path = "../../obbFiles/#{ENV['versionsFilePostfix']}/"
 
 					search = File.join(obb_file_path, '*.obb')
 					paths = Dir.glob(search, File::FNM_CASEFOLD)

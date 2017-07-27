@@ -35,8 +35,8 @@ module Fastlane
 						}
 				end
 				unless cmd.nil?
-					 gs_execute_command(options)
-					 Helper::GsAndroidHelper.sendJobState(ENV['alias'], params[:lane], 'successful')
+					 Helper::GsAndroidHelper.run_action(Actions::GsExecuteCommandAction, options)
+					 Helper::GsAndroidHelper.send_job_state(ENV['alias'], params[:lane], 'successful')
 				end
       end
 

@@ -3,47 +3,47 @@ module Fastlane
     class GsAndroidBetaAction < Action
       def self.run(params)
         # Increment the build number (not the version number)
-				#Helper::GsAndroidHelper.gradle_with_params("incrementVersionCode", "versionsFilePostfix": ENV["versionsFilePostfix"])
-				#Helper::GsAndroidHelper.gradle_with_params("incrementBetaVersionName", "versionsFilePostfix": ENV["versionsFilePostfix"])
-				Helper::VersionWorker.incrementVersionCode(ENV["versionsFilePostfix"], ENV["build_gradle_file_path"])
-				version_name = Helper::VersionWorker.incrementBetaVersionName(ENV["versionsFilePostfix"], ENV["build_gradle_file_path"], ENV["general_major_version"]).to_s
+		#Helper::GsAndroidHelper.gradle_with_params("incrementVersionCode", "versionsFilePostfix": ENV["versionsFilePostfix"])
+		#Helper::GsAndroidHelper.gradle_with_params("incrementBetaVersionName", "versionsFilePostfix": ENV["versionsFilePostfix"])
+		Helper::VersionWorker.incrementVersionCode(ENV["versionsFilePostfix"], ENV["build_gradle_file_path"])
+		version_name = Helper::VersionWorker.incrementBetaVersionName(ENV["versionsFilePostfix"], ENV["build_gradle_file_path"], ENV["general_major_version"]).to_s
 
-				Helper::GsAndroidHelper.generate_release_notes("fileBeta", ENV['alias'], version_name, "Ru")
-				Helper::GsAndroidHelper.generate_release_notes("fileBeta", ENV['alias'], version_name, "En")
+		Helper::GsAndroidHelper.generate_release_notes("fileBeta", ENV['alias'], version_name, "Ru")
+		Helper::GsAndroidHelper.generate_release_notes("fileBeta", ENV['alias'], version_name, "En")
 
-				ruText = Helper::FileHelper.read(Dir.pwd + "/../../../notes/" + ENV['alias'] + "/" + version_name + "_Ru.txt")
-				enText = Helper::FileHelper.read(Dir.pwd + "/../../../notes/" + ENV['alias'] + "/" + version_name + "_En.txt")
+		ruText = Helper::FileHelper.read(Dir.pwd + "/../../notes/" + ENV['alias'] + "/" + version_name + "_Ru.txt")
+		enText = Helper::FileHelper.read(Dir.pwd + "/../../notes/" + ENV['alias'] + "/" + version_name + "_En.txt")
 
-				require 'date'
-				current_time = DateTime.now
-				time_string = current_time.strftime "%d.%m.%Y %H:%M"
-				crashlytics_changelog = time_string + "\n" + ruText + "\n\n" + enText
-				UI.message("changelog = " + crashlytics_changelog)
+		require 'date'
+		current_time = DateTime.now
+		time_string = current_time.strftime "%d.%m.%Y %H:%M"
+		crashlytics_changelog = time_string + "\n" + ruText + "\n\n" + enText
+		UI.message("changelog = " + crashlytics_changelog)
 
-				gradle(task: "clean")
+		Helper::GsAndroidHelper.run_action(Actions::GradleAction, task: "clean")
 
-				#Some applications have different apk types. We need only universal (if it exists) apk on crashlytics
-				buildType = "Beta"
+		#Some applications have different apk types. We need only universal (if it exists) apk on crashlytics
+		buildType = "Beta"
 
-				unless ENV["apkType"].nil?
-							buildType = ENV["apkType"] + buildType
-				end
+		unless ENV["apkType"].nil?
+					buildType = ENV["apkType"] + buildType
+		end
 
-				unless ENV["flavor"].nil?
-						 gradle(task: "assemble", flavor: ENV["flavor"], build_type: buildType)
-				else
-						 gradle(task: "assemble", build_type: buildType)
-				end
+		unless ENV["flavor"].nil?
+			Helper::GsAndroidHelper.run_action(Actions::GradleAction, task: "assemble", flavor: ENV["flavor"], build_type: buildType)
+		else
+			Helper::GsAndroidHelper.run_action(Actions::GradleAction, task: "assemble", build_type: buildType)
+		end
 
-				crashlytics(
-					 notes: crashlytics_changelog,
-					 groups: params[:test_group_for_fabric]
-				)
+		Helper::GsAndroidHelper.run_action(Actions::CrashlyticsAction,
+			notes: crashlytics_changelog,
+			groups: ENV['test_group_for_fabric']
+		)
 
-				#Helper::GsAndroidHelper.gradle_with_params("saveVersionCode", "versionsFilePostfix": ENV["versionsFilePostfix"])
-				#Helper::GsAndroidHelper.gradle_with_params("saveBetaVersionName", "versionsFilePostfix": ENV["versionsFilePostfix"])
-				Helper::VersionWorker.saveVersionCode(ENV["versionsFilePostfix"], ENV["build_gradle_file_path"])
-				Helper::VersionWorker.saveBetaVersionName(ENV["versionsFilePostfix"], ENV["build_gradle_file_path"])
+		#Helper::GsAndroidHelper.gradle_with_params("saveVersionCode", "versionsFilePostfix": ENV["versionsFilePostfix"])
+		#Helper::GsAndroidHelper.gradle_with_params("saveBetaVersionName", "versionsFilePostfix": ENV["versionsFilePostfix"])
+		Helper::VersionWorker.saveVersionCode(ENV["versionsFilePostfix"], ENV["build_gradle_file_path"])
+		Helper::VersionWorker.saveBetaVersionName(ENV["versionsFilePostfix"], ENV["build_gradle_file_path"])
       end
 
       def self.description
