@@ -59,25 +59,25 @@ module Fastlane
 																																															alias: project_alias,
 																																															displayVersionName: version})
 			Actions::GsGetReleaseNotesAction.run(configuration)
-			notes_file_path = NOTES_PATH_TEMPLATE % {Dir: Dir.pwd, projectAlias: projectAlias, version_name: version_name, lang: lang}
+			notes_file_path = NOTES_PATH_TEMPLATE % {Dir: Dir.pwd, project_alias: project_alias, version_name: version_name, lang: lang}
 			UI.message("Check exist #{notes_file_path}")
 			unless File.exist?(notes_file_path)
 					raise 'Не удалось сгенерировать ReleaseNotes'
 			end
 		end
 
-		def self.loadChangelog(projectAlias, version_name, version_code, locales, version_code_prefixes = nil)
+		def self.loadChangelog(project_alias, version_name, version_code, locales, version_code_prefixes = nil)
 			locales.split(",").each do |locale|
 				lang = locale.split("-")[0].strip.capitalize
 				country = locale.strip
 
-				notesFilePath = NOTES_PATH_TEMPLATE % {Dir: Dir.pwd, projectAlias: projectAlias, version_name: version_name, lang: lang}
+				notesFilePath = NOTES_PATH_TEMPLATE % {Dir: Dir.pwd, project_alias: project_alias, version_name: version_name, lang: lang}
 
 				if File.exist?(notesFilePath)
 					File.delete(notesFilePath)
 				end
 
-				generate_release_notes("fileClosed", projectAlias, version_name, lang)
+				generate_release_notes("fileClosed", project_alias, version_name, lang)
 
 				text = FileHelper.read(notesFilePath)
 
