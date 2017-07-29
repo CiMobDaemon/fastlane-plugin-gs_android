@@ -9,12 +9,12 @@ module Fastlane
 
 				Helper::GsAndroidHelper.loadChangelog(ENV['alias'], version_name, version_code, ENV['locales'], ENV["version_code_prefix"])
 
-				Actions::GradleAction.run(task: "clean")
+				Helper::GsAndroidHelper.run_action(Actions::GradleAction,task: "clean")
 
 				unless ENV["flavor"].nil?
-						 Actions::GradleAction.run(task: "assemble", flavor: ENV["flavor"], build_type: "Release")
-				else
-						 Actions::GradleAction.run(task: "assemble", build_type: "Release")
+						Helper::GsAndroidHelper.run_action(Actions::GradleAction,task: "assemble", flavor: ENV["flavor"], build_type: "Release")
+					else
+						Helper::GsAndroidHelper.run_action(Actions::GradleAction,task: "assemble", build_type: "Release")
 				end
 
 				#specially for MapMobile
