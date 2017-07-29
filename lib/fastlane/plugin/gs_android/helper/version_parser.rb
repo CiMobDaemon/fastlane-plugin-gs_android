@@ -12,7 +12,7 @@ module Fastlane
       OBB_MAIN_NAMES = {version: 'mainObbFileVersion', size: 'mainObbFileSize'}
       OBB_PATCH_NAMES = {version: 'patchObbFileVersion', size: 'patchObbFileSize'}
 
-      VERSION_TEMPLATE = "%{name} ?=? ?'?(\\d+).(\\d+).?(\\d*)\\(?(\\d*)\\)?'?"
+      VERSION_TEMPLATE = "%{name} ?=? ?'?(\\d+\\.\\d+\\.?\\d*\\(?\\d*\\)?)'?"
 
       def self.parseVersion(path, version_name)
         versions_text = FileHelper.read(path.to_s)
@@ -22,7 +22,11 @@ module Fastlane
           UI.important(message)
           raise message
         else
-          return ProjectVersion.new(version[1], version[2], version[3], version[4])
+          version = version[1]
+          major_v, minor_v, tail = version.match("(\\d+)\\.(\\d+)(.*)")
+          patch_v = tail.match("(\\.(\\d+))?")[2]
+          build_n = tail.match("(\\((\\d+)\\))?")[2]
+          return ProjectVersion.new(major_v, minor_v, patch_v, build_n)
         end
       end
 
