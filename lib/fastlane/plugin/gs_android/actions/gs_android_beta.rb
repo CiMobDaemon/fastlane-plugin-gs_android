@@ -11,8 +11,8 @@ module Fastlane
 		Helper::GsAndroidHelper.generate_release_notes("fileBeta", ENV['alias'], version_name, "Ru")
 		Helper::GsAndroidHelper.generate_release_notes("fileBeta", ENV['alias'], version_name, "En")
 
-		ruText = Helper::FileHelper.read(Dir.pwd + "/../../notes/" + ENV['alias'] + "/" + version_name + "_Ru.txt")
-		enText = Helper::FileHelper.read(Dir.pwd + "/../../notes/" + ENV['alias'] + "/" + version_name + "_En.txt")
+		ruText = Helper::FileHelper.read(Helper::GsAndroidHelper.NOTES_PATH_TEMPLATE % {Dir: Dir.pwd, projectAlias: ENV['alias'], version_name: version_name, lang: 'Ru'})
+		enText = Helper::FileHelper.read(Helper::GsAndroidHelper.NOTES_PATH_TEMPLATE % {Dir: Dir.pwd, projectAlias: ENV['alias'], version_name: version_name, lang: 'En'})
 
 		require 'date'
 		current_time = DateTime.now

@@ -5,6 +5,9 @@ module Fastlane
       # as `Helper::GsAndroidHelper.your_method`
       #
       #fastlane has not option to execute gradle task with params (22.05.17)
+
+			NOTES_PATH_TEMPLATE = "%{Dir}/../../notes/%{project_alias}/%{version}_%{lang}.txt"
+
       def self.run_action(action, args)
       	configuration = FastlaneCore::Configuration.create(action.available_options, args)
       	action.run(configuration)
@@ -56,8 +59,9 @@ module Fastlane
 																																															alias: project_alias,
 																																															displayVersionName: version})
 			Actions::GsGetReleaseNotesAction.run(configuration)
-			UI.message("Check exist #{Dir.pwd}/../../notes/#{project_alias}/#{version}_#{lang}.txt")
-			unless File.exist?("#{Dir.pwd}/../../notes/#{project_alias}/#{version}_#{lang}.txt")
+			notes_file_path = NOTES_PATH_TEMPLATE % {Dir: Dir.pwd, projectAlias: projectAlias, version_name: version_name, lang: lang}
+			UI.message("Check exist #{notes_file_path}")
+			unless File.exist?(notes_file_path)
 					raise 'Не удалось сгенерировать ReleaseNotes'
 			end
 		end
@@ -67,7 +71,7 @@ module Fastlane
 				lang = locale.split("-")[0].strip.capitalize
 				country = locale.strip
 
-				notesFilePath = Dir.pwd + "../../notes/#{projectAlias}/#{version_name}_#{lang}.txt"
+				notesFilePath = NOTES_PATH_TEMPLATE % {Dir: Dir.pwd, projectAlias: projectAlias, version_name: version_name, lang: lang}
 
 				if File.exist?(notesFilePath)
 					File.delete(notesFilePath)
