@@ -6,7 +6,7 @@ module Fastlane
       #
       #fastlane has not option to execute gradle task with params (22.05.17)
 
-			NOTES_PATH_TEMPLATE = "%{Dir}/../../notes/%{project_alias}/%{version}_%{lang}.txt"
+			NOTES_PATH_TEMPLATE = "%{Dir}/../../notes/%{project_alias}/%{version_name}_%{lang}.txt"
 
       def self.run_action(action, args)
       	configuration = FastlaneCore::Configuration.create(action.available_options, args)
