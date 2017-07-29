@@ -23,7 +23,7 @@ module Fastlane
           raise message
         else
           version = version[1]
-          major_v, minor_v, tail = version.match("(\\d+)\\.(\\d+)(.*)")
+          major_v, minor_v, tail = version.match("(\\d+)\\.(\\d+)(.*)").captures
           patch_v = tail.match("(\\.(\\d+))?")[2]
           build_n = tail.match("(\\((\\d+)\\))?")[2]
           return ProjectVersion.new(major_v, minor_v, patch_v, build_n)
