@@ -7,7 +7,7 @@ module Fastlane
       #fastlane has not option to execute gradle task with params (22.05.17)
 
 			NOTES_PATH_TEMPLATE = "%{Dir}/../../notes/%{project_alias}/%{version_name}_%{lang}.txt"
-			CHANGELOG_PATH_TEMPLATE = "%{Dir}/metadata/android/%{country}/changelogs/%{version_code}.txt"
+			CHANGELOG_PATH_TEMPLATE = "%{Dir}/fastlane/metadata/android/%{country}/changelogs/%{version_code}.txt"
 
       def self.run_action(action, args)
       	configuration = FastlaneCore::Configuration.create(action.available_options, args)
@@ -85,11 +85,11 @@ module Fastlane
 				unless version_code_prefixes.nil?
 						version_code_prefix = version_code_prefixes.split(",")
 						version_code_prefix.each do |version_code_prefix|
-							UI.message("Writing to #{CHANGELOG_PATH_TEMPLATE % {Dir: Dir.pwd, country: country, version_code: "#{version_code_prefix}#{version_code}"}}")
+							UI.message("Writing changelog to #{CHANGELOG_PATH_TEMPLATE % {Dir: Dir.pwd, country: country, version_code: "#{version_code_prefix}#{version_code}"}}")
 								FileHelper.write(CHANGELOG_PATH_TEMPLATE % {Dir: Dir.pwd, country: country, version_code: "#{version_code_prefix}#{version_code}"}, text)
 						end
 				end
-				UI.message("Writing to #{CHANGELOG_PATH_TEMPLATE % {Dir: Dir.pwd, country: country, version_code: version_code}}")
+				UI.message("Writing changelog to #{CHANGELOG_PATH_TEMPLATE % {Dir: Dir.pwd, country: country, version_code: version_code}}")
 				FileHelper.write(CHANGELOG_PATH_TEMPLATE % {Dir: Dir.pwd, country: country, version_code: version_code}, text)
 		end
 	  end
