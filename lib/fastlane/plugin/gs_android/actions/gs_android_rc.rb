@@ -71,7 +71,7 @@ module Fastlane
 					#Helper::GsAndroidHelper.gradle_with_params("saveObbFileInfo", "versionsFilePostfix": ENV["versionsFilePostfix"], "obbType": "patch", "obbVersion": obbPatchFileVersion.to_s, "obbSize": obbPatchFileSize.to_s)
 					Helper::VersionWorker.saveMainObbFileInfo(ENV["versionsFilePostfix"], obb_main_file_version.to_s, obb_main_file_size.to_s)
 				else
-					supply(track: "beta", skip_upload_metadata: true, skip_upload_images: true, skip_upload_screenshots: true)
+					Helper::GsAndroidHelper.run_action(Actions::SupplyAction, track: "beta", skip_upload_metadata: true, skip_upload_images: true, skip_upload_screenshots: true)
 				end
 
 				#Helper::GsAndroidHelper.gradle_with_params("saveVersionCode", "versionsFilePostfix": ENV["versionsFilePostfix"])

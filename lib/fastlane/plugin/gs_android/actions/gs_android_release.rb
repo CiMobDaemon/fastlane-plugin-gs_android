@@ -6,8 +6,7 @@ module Fastlane
 
         Helper::GooglePlayLoader.update_changelog(ENV['alias'], ENV['app_id'], version_name, 'beta', ENV['locales'], ENV['json_key_file'])
 
-        supply(track: "beta", track_promote_to: "production", skip_upload_apk: true, skip_upload_metadata: true, skip_upload_images: true, skip_upload_screenshots: true)
-        #Helper::GsAndroidHelper.gradle_with_params("saveReleaseVersionName", "versionsFilePostfix": ENV["versionsFilePostfix"])
+        Helper::GsAndroidHelper.run_action(Actions::SupplyAction, track: "beta", track_promote_to: "production", skip_upload_apk: true, skip_upload_metadata: true, skip_upload_images: true, skip_upload_screenshots: true)
         Helper::VersionWorker.saveReleaseVersionName(ENV["versionsFilePostfix"])
       end
 
