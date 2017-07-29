@@ -46,7 +46,7 @@ module Fastlane
 			UI.message('------REQUEST------\n' + request.body + '\nResponse:\n' + response.body)
 		end
 
-		def self.generate_release_notes(cmd, project_alias, version, lang = nil)
+		def self.generate_release_notes(cmd, project_alias, version_name, lang = nil)
 			cmnd = cmd
 			if lang != nil
 				 cmnd = cmnd+lang
@@ -57,7 +57,7 @@ module Fastlane
 			configuration = FastlaneCore::Configuration.create(Actions::GsGetReleaseNotesAction.available_options, {cmd: cmnd,
 																																															lang: lang,
 																																															alias: project_alias,
-																																															displayVersionName: version})
+																																															displayVersionName: version_name})
 			Actions::GsGetReleaseNotesAction.run(configuration)
 			notes_file_path = NOTES_PATH_TEMPLATE % {Dir: Dir.pwd, project_alias: project_alias, version_name: version_name, lang: lang}
 			UI.message("Check exist #{notes_file_path}")
