@@ -27,7 +27,7 @@ module Fastlane
 						language = locale.strip
 
 						#read changelog
-						changelog = FileHelper.read(Helper::GsAndroidHelper::CHANGELOG_PATH_TEMPLATE % {dir: Dir.pwd, language: language, version_code: version_code})
+						changelog = FileHelper.read(Helper::GsAndroidHelper::CHANGELOG_PATH_TEMPLATE % {Dir: Dir.pwd, country: language, version_code: version_code})
 
 						apk_listing_object = Google::Apis::AndroidpublisherV2::ApkListing.new({
 																																language: language,
