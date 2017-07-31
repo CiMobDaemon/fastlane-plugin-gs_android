@@ -22,7 +22,7 @@ module Fastlane
 				version_codes = android_publisher.get_edit_track(package_name, current_edit.id, track).version_codes
 
 				version_codes.each do |version_code|
-					loadChangelog(projectAlias, version_name, version_code,locales)
+					Helper::GsAndroidHelper.loadChangelog(projectAlias, version_name, version_code,locales)
 
 					locales.split(",").each do |locale|
 						language = locale.strip
