@@ -1,7 +1,6 @@
 module Fastlane
   module Helper
     class GooglePlayLoader
-			CHANGELOG_PATH_TEMPLATE = "%{dir}/metadata/android/%{language}/changelogs/%{version_code}.txt"
 
       def self.update_changelog(projectAlias, package_name, version_name, track, locales, json_key_file_path)
         require 'googleauth'
@@ -28,7 +27,7 @@ module Fastlane
 						language = locale.strip
 
 						#read changelog
-						changelog = FileHelper.read(CHANGELOG_PATH_TEMPLATE % {dir: Dir.pwd, language: language, version_code: version_code})
+						changelog = FileHelper.read(Helper::GsAndroidHelper::CHANGELOG_PATH_TEMPLATE % {dir: Dir.pwd, language: language, version_code: version_code})
 
 						apk_listing_object = Google::Apis::AndroidpublisherV2::ApkListing.new({
 																																language: language,
