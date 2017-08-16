@@ -1,7 +1,6 @@
 module Fastlane
   module Helper
     class VersionWorker
-      #VERSION_FILES_PATH_TEMPLATE = "../../versionsFiles/versions%{postfix}.txt"
       VERSIONS_URL_TEMPLATE = "http://mobile.geo4.io/bot/releaseBuilder/versions/"
 
       def self.increment_version_code(project_alias, build_gradle_path)

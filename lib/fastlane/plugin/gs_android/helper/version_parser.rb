@@ -102,15 +102,15 @@ module Fastlane
       end
 
       def self.save_beta_version(url, project_alias, version)
-        self.save_version_to_url(url, project_alias, {BETA_VERSION_NAME: version})
+        self.save_version_to_url(url, project_alias, {"#{BETA_VERSION_NAME}": "#{version}"})
       end
 
       def self.save_rc_version(url, project_alias, version)
-        self.save_version_to_url(url, project_alias, {RC_VERSION_NAME: version})
+        self.save_version_to_url(url, project_alias, {"#{RC_VERSION_NAME}": "#{version}"})
       end
 
       def self.save_release_version(url, project_alias, version)
-        self.save_version_to_url(url, project_alias, {RELEASE_VERSION_NAME: version})
+        self.save_version_to_url(url, project_alias, {"#{RELEASE_VERSION_NAME}": "#{version}"})
       end
 
       def self.save_gradle_version(build_gradle_path, version)
@@ -132,7 +132,7 @@ module Fastlane
       end
 
       def self.save_version_code_to_url(url, project_alias, version_code)
-        return self.save_version_to_url(url, project_alias, {VERSION_CODE_NAME: version_code})
+        self.save_version_to_url(url, project_alias, {"#{VERSION_CODE_NAME}": "#{version_code}"})
       end
 
       def self.parse_version_code_from_file(path)
