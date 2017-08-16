@@ -5,8 +5,8 @@ module Fastlane
         # Increment the build number (not the version number)
 		#Helper::GsAndroidHelper.gradle_with_params("incrementVersionCode", "versionsFilePostfix": ENV["versionsFilePostfix"])
 		#Helper::GsAndroidHelper.gradle_with_params("incrementBetaVersionName", "versionsFilePostfix": ENV["versionsFilePostfix"])
-		Helper::VersionWorker.incrementVersionCode(ENV["versionsFilePostfix"], ENV["build_gradle_file_path"])
-		version_name = Helper::VersionWorker.incrementBetaVersionName(ENV["versionsFilePostfix"], ENV["build_gradle_file_path"], ENV["general_major_version"]).to_s
+		Helper::VersionWorker.increment_version_code(ENV["alias"], ENV["build_gradle_file_path"])
+		version_name = Helper::VersionWorker.increment_beta_version_name(ENV["alias"], ENV["build_gradle_file_path"], ENV["general_major_version"]).to_s
 
 		Helper::GsAndroidHelper.generate_release_notes("fileBeta", ENV['alias'], version_name, "Ru")
 		Helper::GsAndroidHelper.generate_release_notes("fileBeta", ENV['alias'], version_name, "En")
@@ -42,8 +42,8 @@ module Fastlane
 
 		#Helper::GsAndroidHelper.gradle_with_params("saveVersionCode", "versionsFilePostfix": ENV["versionsFilePostfix"])
 		#Helper::GsAndroidHelper.gradle_with_params("saveBetaVersionName", "versionsFilePostfix": ENV["versionsFilePostfix"])
-		Helper::VersionWorker.saveVersionCode(ENV["versionsFilePostfix"], ENV["build_gradle_file_path"])
-		Helper::VersionWorker.saveBetaVersionName(ENV["versionsFilePostfix"], ENV["build_gradle_file_path"])
+		Helper::VersionWorker.save_version_code(ENV["alias"], ENV["build_gradle_file_path"])
+		Helper::VersionWorker.save_beta_version_name(ENV["alias"], ENV["build_gradle_file_path"])
       end
 
       def self.description

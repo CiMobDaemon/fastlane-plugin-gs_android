@@ -3,9 +3,9 @@ module Fastlane
     class GsAndroidAfterAllAction < Action
       def self.run(params)
         if params[:lane] == :release
-          version_name = Helper::VersionWorker.getReleaseVersionName(ENV['versionsFilePostfix']).to_s
+          version_name = Helper::VersionWorker.get_release_version_name(ENV['alias']).to_s
 				else
-					version_name = Helper::VersionWorker.getCurrentVersionName(ENV['build_gradle_file_path']).to_s
+					version_name = Helper::VersionWorker.get_current_version_name(ENV['build_gradle_file_path']).to_s
 				end
 
 				cmd = nil
@@ -18,7 +18,7 @@ module Fastlane
 							alias: ENV['alias']
 					 }
 				elsif params[:lane] == :rc
-					build_number = Helper::VersionWorker.getRcVersionName(ENV['versionsFilePostfix']).build_number
+					build_number = Helper::VersionWorker.get_rc_version_name(ENV['alias']).build_number
 						cmd = 'mv2rc'
 						options = {cmd: cmd,
 							 displayVersionName: version_name,

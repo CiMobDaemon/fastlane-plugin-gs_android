@@ -5,9 +5,9 @@ module Fastlane
         exception = params[:exception]
         begin
           if params[:lane] == :release
-            version_name = Helper::VersionWorker.getReleaseVersionName(ENV['versionsFilePostfix']).to_s
+            version_name = Helper::VersionWorker.get_release_version_name(ENV['alias']).to_s
           else
-            version_name = Helper::VersionWorker.getCurrentVersionName(ENV['build_gradle_file_path']).to_s
+            version_name = Helper::VersionWorker.get_current_version_name(ENV['build_gradle_file_path']).to_s
           end
           message = "#{ENV['project_name']} #{version_name} build has failed. Reason:\n#{exception.message}"
         rescue StandardError => error
