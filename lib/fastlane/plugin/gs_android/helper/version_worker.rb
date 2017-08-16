@@ -6,7 +6,7 @@ module Fastlane
 
       def self.increment_version_code(project_alias, build_gradle_path)
         UI.message(':incrementVersionCode - Incrementing Version Code...')
-        version_code = VersionParser.parseVersionCode("#{VERSIONS_URL_TEMPLATE}#{project_alias}")
+        version_code = VersionParser.parse_version_code_from_url("#{VERSIONS_URL_TEMPLATE}#{project_alias}")
         UI.message(":incrementVersionCode - current versionCode = #{version_code}")
         version_code += 1
         UI.message(":incrementVersionCode - next versionCode = #{version_code}")
