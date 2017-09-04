@@ -18,7 +18,7 @@ module Fastlane
 				current_edit = android_publisher.insert_edit(package_name)
 
 				#get version codes
-				version_codes = android_publisher.get_edit_track(package_name, current_edit.id, track).version_codes
+				version_codes = android_publisher.get_track(package_name, current_edit.id, track).version_codes
 
 				version_codes.each do |version_code|
 					Helper::GsAndroidHelper.loadChangelog(projectAlias, version_name, version_code,locales)
