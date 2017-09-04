@@ -34,7 +34,7 @@ module Fastlane
 																																recent_changes: changelog
 																														})
 						#Update changelog for existing
-						android_publisher.update_edit_apklisting(package_name, current_edit.id, version_code, language, apk_listing_object)
+						android_publisher.update_apk_listing(package_name, current_edit.id, version_code, language, apk_listing_object)
 					end
 				end
 
