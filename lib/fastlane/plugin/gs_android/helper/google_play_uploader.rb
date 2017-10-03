@@ -23,6 +23,7 @@ module Fastlane
 				version_codes = android_publisher.get_track(package_name, current_edit.id, track).version_codes
 
 				version_codes.each do |version_code|
+          UI.message("Uploading for version code #{version_code}")
 					Helper::GsAndroidHelper.load_changelog(projectAlias, version_name, version_code, locales)
 
 					locales.split(",").each do |locale|
