@@ -6,6 +6,8 @@ module Fastlane
         require 'googleauth'
 				require 'google/apis/androidpublisher_v2'
 
+				UI.message("Starting upload changelog on google play for package #{package_name} version name #{version_name} and track - #{track}")
+
 				#Google api authorization
 				scope = Google::Apis::AndroidpublisherV2::AUTH_ANDROIDPUBLISHER
 				key_io = File.open(File.expand_path(json_key_file_path))
@@ -21,7 +23,7 @@ module Fastlane
 				version_codes = android_publisher.get_track(package_name, current_edit.id, track).version_codes
 
 				version_codes.each do |version_code|
-					Helper::GsAndroidHelper.loadChangelog(projectAlias, version_name, version_code,locales)
+					Helper::GsAndroidHelper.load_changelog(projectAlias, version_name, version_code, locales)
 
 					locales.split(",").each do |locale|
 						language = locale.strip
@@ -40,6 +42,7 @@ module Fastlane
 
 				#commit edit
 				android_publisher.commit_edit(package_name, current_edit.id)
+				UI.message('Upload succesfully')
       end
     end
   end

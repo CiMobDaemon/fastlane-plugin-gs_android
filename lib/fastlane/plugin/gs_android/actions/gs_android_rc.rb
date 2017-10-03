@@ -5,7 +5,7 @@ module Fastlane
 				version_code = Helper::VersionWorker.increment_version_code(ENV["alias"], ENV["build_gradle_file_path"]).to_s
 				version_name = Helper::VersionWorker.increment_rc_version_name(ENV["alias"], ENV["build_gradle_file_path"], ENV["general_major_version"].to_i).to_s
 
-				Helper::GsAndroidHelper.loadChangelog(ENV['alias'], version_name, version_code, ENV['locales'], ENV["version_code_prefix"])
+				Helper::GsAndroidHelper.load_changelog(ENV['alias'], version_name, version_code, ENV['locales'], ENV["version_code_prefix"])
 
 				Helper::GsAndroidHelper.run_action(Actions::GradleAction, task: "clean")
 

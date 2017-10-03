@@ -6,8 +6,8 @@ module Fastlane
       #
       #fastlane has not option to execute gradle task with params (22.05.17)
 
-			NOTES_PATH_TEMPLATE = "%{Dir}/../../notes/%{project_alias}/%{version_name}_%{lang}.txt"
-			CHANGELOG_PATH_TEMPLATE = "%{Dir}/fastlane/metadata/android/%{country}/changelogs/%{version_code}.txt"
+			NOTES_PATH_TEMPLATE = '%{Dir}/../../notes/%{project_alias}/%{version_name}_%{lang}.txt'
+			CHANGELOG_PATH_TEMPLATE = '%{Dir}/fastlane/metadata/android/%{country}/changelogs/%{version_code}.txt'
 
       def self.run_action(action, args)
       	configuration = FastlaneCore::Configuration.create(action.available_options, args)
@@ -67,24 +67,24 @@ module Fastlane
 			end
 		end
 
-		def self.loadChangelog(project_alias, version_name, version_code, locales, version_code_prefixes = nil)
-			locales.split(",").each do |locale|
-				lang = locale.split("-")[0].strip.capitalize
+		def self.load_changelog(project_alias, version_name, version_code, locales, version_code_prefixes = nil)
+			locales.split(',').each do |locale|
+				lang = locale.split('-')[0].strip.capitalize
 				country = locale.strip
 
-				notesFilePath = NOTES_PATH_TEMPLATE % {Dir: Dir.pwd, project_alias: project_alias, version_name: version_name, lang: lang}
+				notes_file_path = NOTES_PATH_TEMPLATE % {Dir: Dir.pwd, project_alias: project_alias, version_name: version_name, lang: lang}
 
-				if File.exist?(notesFilePath)
-					File.delete(notesFilePath)
+				if File.exist?(notes_file_path)
+					File.delete(notes_file_path)
 				end
 
-				generate_release_notes("fileClosed", project_alias, version_name, lang)
+				generate_release_notes('fileClosed', project_alias, version_name, lang)
 
-				text = FileHelper.read(notesFilePath)
+				text = FileHelper.read(notes_file_path)
 
 				unless version_code_prefixes.nil?
-						version_code_prefix = version_code_prefixes.split(",")
-						version_code_prefix.each do |version_code_prefix|
+						version_code_prefixes = version_code_prefixes.split(',')
+						version_code_prefixes.each do |version_code_prefix|
 							UI.message("Writing changelog to #{CHANGELOG_PATH_TEMPLATE % {Dir: Dir.pwd, country: country, version_code: "#{version_code_prefix}#{version_code}"}}")
 								FileHelper.write(CHANGELOG_PATH_TEMPLATE % {Dir: Dir.pwd, country: country, version_code: "#{version_code_prefix}#{version_code}"}, text)
 						end
