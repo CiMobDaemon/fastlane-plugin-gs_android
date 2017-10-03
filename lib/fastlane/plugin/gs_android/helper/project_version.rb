@@ -13,6 +13,10 @@ module Fastlane
 				return "#{self.major_version}.#{self.minor_version}" + (self.patch_version.nil? ? '' : ".#{self.patch_version}") + (self.build_number.nil? ? '' : "(#{self.build_number})")
 			end
 
+			def normalized_name
+				return "#{self.major_version}.#{self.minor_version}" + (self.patch_version.nil? ? '' : ".#{self.patch_version}")
+			end
+
 			def set_new_version(major_version, minor_version, patch_version = nil, build_number = nil)
 				self.major_version = major_version
 				self.minor_version = minor_version
