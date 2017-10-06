@@ -8,11 +8,11 @@ module Fastlane
       end
 
       def self.description
-        "Custom google play uploader for MapMobile"
+        'Custom google play uploader for projects with OBB files'
       end
 
       def self.authors
-        ["Dmitry Ulyanov"]
+        ['Dmitry Ulyanov']
       end
 
       def self.return_value
