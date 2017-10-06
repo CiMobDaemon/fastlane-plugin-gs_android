@@ -18,7 +18,6 @@ module Fastlane
       end
 
       def self.return_value
-        # If your method provides a return value, you can describe here what it does
       end
 
       def self.details
@@ -29,10 +28,7 @@ module Fastlane
       end
 
       def self.is_supported?(platform)
-        # Adjust this if your plugin only works for a particular platform (iOS vs. Android, for example)
-        # See: https://github.com/fastlane/fastlane/blob/master/fastlane/docs/Platforms.md
-
-        [:android,].include?(platform)
+        platform == :android
       end
     end
   end
