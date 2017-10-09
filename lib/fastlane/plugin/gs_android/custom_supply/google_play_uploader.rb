@@ -5,15 +5,31 @@ module Fastlane
   module CustomSupply
     class GooglePlayUploader
       def perform_upload
-        client.begin_edit(package_name: CustomSupply.config[:package_name])
-        upload_binaries unless CustomSupply.config[:skip_upload_apk]
+        FastlaneCore::PrintTable.print_values(config: CustomSupply::config, title: 'Summary for custom supply')
+
+        client.begin_edit(package_name: CustomSupply::config[:package_name])
+        upload_binaries unless CustomSupply::config[:skip_upload_apk]
         UI.message('Uploading all changes to Google Play...')
         client.commit_current_edit!
         UI.success('Successfully finished the upload to Google Play')
       end
 
+      def upload_changelogs(language)
+        client.apks_version_codes.each do |apk_version_code|
+          upload_changelog(language, apk_version_code)
+        end
+      end
+
+      def upload_changelog(language, apk_version_code)
+        path = File.join(metadata_path, language, CustomSupply::CHANGELOGS_FOLDER_NAME, "#{apk_version_code}.txt")
+        if File.exist?(path)
+          UI.message("Updating changelog for code version '#{apk_version_code}' and language '#{language}'...")
+          client.update_apk_listing_for_language(apk_version_code, language, File.read(path, encoding: 'UTF-8'))
+        end
+      end
+
       def upload_binaries
-        apk_paths = [CustomSupply.config[:apk]] unless (apk_paths = CustomSupply.config[:apk_paths])
+        apk_paths = [CustomSupply::config[:apk]] unless (apk_paths = CustomSupply::config[:apk_paths])
 
         apk_version_codes = []
 
@@ -40,18 +56,18 @@ module Fastlane
           apk_version_code = client.upload_apk(apk_path)
           UI.user_error!("Could not upload #{apk_path}") unless apk_version_code
 
-          if CustomCustomSupply.config[:obb_main_references_version] && CustomCustomSupply.config[:obb_main_file_size]
+          if CustomSupply::config[:obb_main_references_version] && CustomSupply::config[:obb_main_file_size]
             update_obb(apk_version_code,
                      'main',
-                     CustomSupply.config[:obb_main_references_version],
-                     CustomSupply.config[:obb_main_file_size])
+                     CustomSupply::config[:obb_main_references_version],
+                     CustomSupply::config[:obb_main_file_size])
           end
 
-          if CustomSupply.config[:obb_patch_references_version] && CustomSupply.config[:obb_patch_file_size]
+          if CustomSupply::config[:obb_patch_references_version] && CustomSupply::config[:obb_patch_file_size]
             update_obb(apk_version_code,
                       'patch',
-                      CustomSupply.config[:obb_patch_references_version],
-                      CustomSupply.config[:obb_patch_file_size])
+                      CustomSupply::config[:obb_patch_references_version],
+                      CustomSupply::config[:obb_patch_file_size])
           end
 
           upload_obbs(apk_path, apk_version_code)
@@ -69,12 +85,12 @@ module Fastlane
       end
 
       def update_track(apk_version_codes)
-        UI.message("Updating track '#{CustomSupply.config[:track]}'...")
+        UI.message("Updating track '#{CustomSupply::config[:track]}'...")
 
-        if CustomSupply.config[:track].eql?("rollout")
-          client.update_track(CustomSupply.config[:track], CustomSupply.config[:rollout] || 0.1, apk_version_codes)
+        if CustomSupply::config[:track].eql?("rollout")
+          client.update_track(CustomSupply::config[:track], CustomSupply::config[:rollout] || 0.1, apk_version_codes)
         else
-          client.update_track(CustomSupply.config[:track], 1.0, apk_version_codes)
+          client.update_track(CustomSupply::config[:track], 1.0, apk_version_codes)
         end
       end
 
@@ -87,11 +103,11 @@ module Fastlane
       end
 
       def client
-        @client ||= Client.make_from_config
+        @client ||= GooglePlayClient.new(CustomSupply::config[:json_key])
       end
 
       def metadata_path
-        CustomSupply.config[:metadata_path]
+        CustomSupply::config[:metadata_path]
       end
 
       def update_obb(apk_version_code, expansion_file_type, references_version, file_size)

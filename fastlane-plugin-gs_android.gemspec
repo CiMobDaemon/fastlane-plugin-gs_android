@@ -7,7 +7,7 @@ require 'fastlane/plugin/gs_android/version'
 Gem::Specification.new do |spec|
   spec.name          = 'fastlane-plugin-gs_android'
   spec.version       = Fastlane::GsAndroid::VERSION
-  spec.author        = 'dmitry'
+  spec.author        = 'Dmitry Ulyanov'
   spec.email         = 'ulyanovdmitrya@gmail.com'
 
   spec.summary       = 'Plugin for GS android projects'

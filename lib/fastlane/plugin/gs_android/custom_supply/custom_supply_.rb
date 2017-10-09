@@ -1,3 +1,0 @@
-
-class CustomSupply
-end

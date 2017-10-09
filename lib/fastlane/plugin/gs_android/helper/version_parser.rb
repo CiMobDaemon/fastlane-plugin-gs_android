@@ -88,7 +88,7 @@ module Fastlane
         request = Net::HTTP::Patch.new(uri.to_s)
         request['Content-Type'] = 'application/json'
         request.body = data.to_json
-        response = http.request(request)
+        http.request(request)
       end
 
       def self.save_version_to_file(path, version_name, version)

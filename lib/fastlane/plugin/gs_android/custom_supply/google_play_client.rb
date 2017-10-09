@@ -21,8 +21,8 @@ module Fastlane
         key_io = File.open(File.expand_path(json_key_file_path))
         auth_client = Google::Auth::ServiceAccountCredentials.make_creds(json_key_io: key_io, scope: scope)
         auth_client.fetch_access_token!
-        android_publisher = Google::Apis::AndroidpublisherV2::AndroidPublisherService.new
-        android_publisher.authorization = auth_client
+        self.android_publisher = Google::Apis::AndroidpublisherV2::AndroidPublisherService.new
+        self.android_publisher.authorization = auth_client
       end
 
       #####################################################
@@ -33,7 +33,7 @@ module Fastlane
       def begin_edit(package_name: nil)
         UI.user_error!('You currently have an active edit') if @current_edit
 
-        self.current_edit = call_google_api { android_publisher.insert_edit(package_name) }
+        self.current_edit = call_google_api { self.android_publisher.insert_edit(package_name) }
 
         self.current_package_name = package_name
       end
@@ -86,6 +86,28 @@ module Fastlane
         return result_upload.version_code
       end
 
+      # Updates the track for the provided version code(s)
+      def update_track(track, rollout, apk_version_code)
+        ensure_active_edit!
+
+        track_version_codes = apk_version_code.kind_of?(Array) ? apk_version_code : [apk_version_code]
+
+        track_body = Google::Apis::AndroidpublisherV2::Track.new({
+                                                     track: track,
+                                                     user_fraction: rollout,
+                                                     version_codes: track_version_codes
+                                                 })
+
+        call_google_api do
+          android_publisher.update_track(
+              current_package_name,
+              current_edit.id,
+              track,
+              track_body
+          )
+        end
+      end
+
       def update_apk_listing_for_language(apk_version_code, language, changes)
         ensure_active_edit!
 
@@ -95,7 +117,7 @@ module Fastlane
               current_edit.id,
               apk_version_code,
               language,
-              Androidpublisher::ApkListing.new({
+              Google::Apis::AndroidpublisherV2::ApkListing.new({
                                                    language: language,
                                                    recent_changes: changes
                                                })

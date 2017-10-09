@@ -16,8 +16,8 @@ module Fastlane
 
      	def self.gradle_with_params(task, args)
         	args.each do |paramName, paramValue|
-			task = "-P#{paramName}=#{paramValue} #{task}"
-			end
+						task = "-P#{paramName}=#{paramValue} #{task}"
+					end
 			UI.message("-------Task-------\n#{task}")
 			self.run_action(Actions::GradleAction, task: task)
 			#Actions::GradleAction.run(task: task)
@@ -78,7 +78,7 @@ module Fastlane
 					File.delete(notes_file_path)
 				end
 
-				generate_release_notes('fileClosed', project_alias, version_name, lang)
+				#generate_release_notes('fileClosed', project_alias, version_name, lang)
 
 				text = FileHelper.read(notes_file_path)
 
