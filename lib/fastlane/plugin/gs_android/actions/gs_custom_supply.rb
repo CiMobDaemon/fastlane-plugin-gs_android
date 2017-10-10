@@ -31,8 +31,6 @@ module Fastlane
       end
 
       def self.available_options
-        # require '../custom_supply/custom_supply'
-        # require '../custom_supply/options'
         CustomSupply::Options.available_options
       end
 

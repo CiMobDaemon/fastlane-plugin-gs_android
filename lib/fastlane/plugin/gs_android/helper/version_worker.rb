@@ -1,6 +1,7 @@
 module Fastlane
   module Helper
     class VersionWorker
+
       VERSIONS_URL_TEMPLATE = "http://mobile.geo4.io/bot/releaseBuilder/versions/"
 
       def self.increment_version_code(project_alias, build_gradle_path)
@@ -26,11 +27,13 @@ module Fastlane
         UI.message(':incrementBetaVersionName - Incrementing Version Name...')
         beta_version_name = VersionParser.parse_beta_version("#{VERSIONS_URL_TEMPLATE}#{project_alias}")
         UI.message(":incrementBetaVersionName - current versionName = #{beta_version_name}")
+
         rc_version_name = VersionParser.parse_rc_version("#{VERSIONS_URL_TEMPLATE}#{project_alias}")
-        if beta_version_name.major_version != rc_version_name.major_version || beta_version_name.minor_version != rc_version_name.minor_version
-          beta_version_name.set_new_version(rc_version_name.major_version, rc_version_name.minor_version, 0)
-        end
-        beta_version_name.increment_patch_version
+
+        beta_version_name = ProjectVersion.new(rc_version_name.major_version, rc_version_name.minor_version, 0) unless beta_version_name >= rc_version_name
+
+        beta_version_name += 1.patch
+
         UI.message(":incrementBetaVersionName - new versionName = #{beta_version_name}")
         VersionParser.save_gradle_version(build_gradle_path, beta_version_name)
         return beta_version_name
@@ -51,29 +54,31 @@ module Fastlane
         UI.message(':incrementRcVersionName - Incrementing Version Name...')
         rc_version_name = VersionParser.parse_rc_version("#{VERSIONS_URL_TEMPLATE}#{project_alias}")
         UI.message(":incrementRcVersionName - current versionName = #{rc_version_name}")
+
         if rc_version_name.major_version != general_major_version
-          rc_version_name.set_new_version(general_major_version, 0)
+          rc_version_name = general_major_version.major + 0.minor + 1.build
         else
           release_version_name = VersionParser.parse_release_version("#{VERSIONS_URL_TEMPLATE}#{project_alias}")
-          if rc_version_name.minor_version == release_version_name.minor_version
-            rc_version_name.increment_minor_version
+          if rc_version_name.ignore_build <= release_version_name
+            rc_version_name = release_version_name + 1.minor + 1.build
+          else
+            rc_version_name += 1.build
           end
         end
         UI.message(":incrementRcVersionName - new versionName = #{rc_version_name}")
         VersionParser.save_gradle_version(build_gradle_path, rc_version_name)
-        rc_version_name.build_number = nil # TODO: make more pure
         return rc_version_name
       end
 
       def self.save_rc_version_name(project_alias, build_gradle_path)
         UI.message(':saveRcVersionName - Saving Version Name...')
         rc_version_name = VersionParser.parse_gradle_version(build_gradle_path)
-        UI.message(":saveRcVersionName - versionName = #{rc_version_name}")
         old_rc_version_name = VersionParser.parse_rc_version("#{VERSIONS_URL_TEMPLATE}#{project_alias}")
-        if rc_version_name.major_version == old_rc_version_name.major_version && rc_version_name.minor_version == old_rc_version_name.minor_version
-          rc_version_name = old_rc_version_name
-        end
-        rc_version_name.increment_build_number
+
+        rc_version_name = old_rc_version_name if (rc_version_name.ignore_build == old_rc_version_name.ignore_build)
+        rc_version_name += 1.build
+
+        UI.message(":saveRcVersionName - versionName = #{rc_version_name}")
         VersionParser.save_rc_version(VERSIONS_URL_TEMPLATE, project_alias, rc_version_name)
       end
 
@@ -83,8 +88,7 @@ module Fastlane
 
       def self.save_release_version_name(project_alias)
         UI.message(':saveRcVersionName - Saving Version Name...')
-        rc_version_name = VersionParser.parse_rc_version("#{VERSIONS_URL_TEMPLATE}#{project_alias}")
-        rc_version_name.build_number = nil
+        rc_version_name = VersionParser.parse_rc_version("#{VERSIONS_URL_TEMPLATE}#{project_alias}").ignore_build
         UI.message(":saveRcVersionName - versionName = #{rc_version_name}")
         VersionParser.save_release_version(VERSIONS_URL_TEMPLATE, project_alias, rc_version_name)
         rc_version_name.build_number = 0

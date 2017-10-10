@@ -14,6 +14,6 @@ module Fastlane
           file.write(str)
           file.close
       end
-	end
+    end
   end
 end

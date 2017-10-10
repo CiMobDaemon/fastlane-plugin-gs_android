@@ -3,17 +3,17 @@ module Fastlane
     class GsAndroidBeforeAllAction < Action
       def self.run(params)
         #create AppFile because Fastlane cannot work with different Appfiles
-        system ("rm -rf Appfile")
+        system ('rm -rf Appfile')
         Helper::FileHelper.write(Dir.pwd + '/Appfile', "json_key_file \"#{ENV['json_key_file']}\"\npackage_name \"#{ENV['app_id']}\"")
-        unless ENV["metadata_dir"].nil?
-          system ("rm -rf metadata")
-          system ("mv #{ENV["metadata_dir"]} metadata")
-          UI.important("Use custom ITC metadata.")
+        unless ENV['metadata_dir'].nil?
+          system ('rm -rf metadata')
+          system ("mv #{ENV['metadata_dir']} metadata")
+          UI.important('Use custom ITC metadata.')
         end
       end
 
       def self.description
-        "Action to create Appfile and move metadata before lanes"
+        'Action to create Appfile and move metadata before lanes'
       end
 
       def self.authors

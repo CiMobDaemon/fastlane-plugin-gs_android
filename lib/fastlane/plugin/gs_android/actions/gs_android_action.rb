@@ -6,7 +6,7 @@ module Fastlane
       end
 
       def self.description
-        "Plugin for GS android projects"
+        'Plugin for GS android projects'
       end
 
       def self.authors
@@ -18,7 +18,7 @@ module Fastlane
 
       def self.details
         # Optional:
-        "Plugin for GS android projects"
+        'Plugin for GS android projects'
       end
 
       def self.available_options

@@ -5,7 +5,7 @@ module Fastlane
         exception = params[:exception]
         begin
           if params[:lane] == :release
-            version_name = Helper::VersionWorker.get_rc_version_name(ENV['alias']).normalized_name
+            version_name = Helper::VersionWorker.get_rc_version_name(ENV['alias']).ignore_build.to_s
           else
             version_name = Helper::VersionWorker.get_current_version_name(ENV['build_gradle_file_path']).to_s
           end
