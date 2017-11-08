@@ -14,7 +14,11 @@ module Fastlane
           message = "#{ENV['project_name']} build has failed. Reason:\n#{exception.message}\nError block has failed. Reason:\n#{error.message}"
         end
         UI.important(message)
-        Helper::GsAndroidHelper.send_job_state(ENV['alias'], params[:lane], 'failed', message)
+        if params[:options] == nil
+          Helper::GsAndroidHelper.send_job_state(ENV['alias'], params[:lane], 'failed', message)
+        else
+          Helper::GsAndroidHelper.send_job_state(ENV['alias'], params[:lane], 'failed', message, options[:restart_build_url])
+        end
       end
 
       def self.description
@@ -42,7 +46,12 @@ module Fastlane
           FastlaneCore::ConfigItem.new(key: :exception,
           description: "Exception",
           optional: false,
-          type: Object) # TODO: change the type
+          type: Object), # TODO: change the type
+
+          FastlaneCore::ConfigItem.new(key: :options,
+          description: "Additional options",
+          optional: true,
+          type: Object)
         ]
       end
 

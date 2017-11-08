@@ -24,7 +24,7 @@ module Fastlane
 			end
 
 			#send job state https://forge.gradoservice.ru/projects/botback/wiki/Rest#jobStates
-			def self.send_job_state(projectAlias, cmd, state, message = nil)
+			def self.send_job_state(projectAlias, cmd, state, message = nil, restart_build_url = nil)
 				require 'net/http'
 				require 'uri'
 				require 'json'
@@ -34,6 +34,10 @@ module Fastlane
 
 				if message != nil
 						data['message'] = message
+				end
+
+				if restart_build_url != nil
+						data['restart_build_url'] = restart_build_url
 				end
 
 				# Create the HTTP objects
