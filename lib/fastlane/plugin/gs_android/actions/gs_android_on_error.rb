@@ -17,7 +17,7 @@ module Fastlane
         if params[:options] == nil
           Helper::GsAndroidHelper.send_job_state(ENV['alias'], params[:lane], 'failed', message)
         else
-          Helper::GsAndroidHelper.send_job_state(ENV['alias'], params[:lane], 'failed', message, options[:restart_build_url])
+          Helper::GsAndroidHelper.send_job_state(ENV['alias'], params[:lane], 'failed', message, params[:options][:restart_build_url])
         end
       end
 
