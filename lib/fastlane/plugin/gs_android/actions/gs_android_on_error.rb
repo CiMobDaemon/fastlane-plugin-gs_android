@@ -2,6 +2,11 @@ module Fastlane
   module Actions
     class GsAndroidOnErrorAction < Action
       def self.run(params)
+        puts "Error params:"
+        puts params
+        puts params[:exception]
+        puts params[:lane]
+        puts params[:options]
         exception = params[:exception]
         begin
           if params[:lane] == :release
