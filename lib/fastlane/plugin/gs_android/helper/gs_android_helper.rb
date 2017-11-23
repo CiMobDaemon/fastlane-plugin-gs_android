@@ -29,7 +29,7 @@ module Fastlane
 				require 'uri'
 				require 'json'
 
-				uri = URI.parse('http://mobile.geo4.io/bot/releaseBuilder/jobStates')
+				uri = URI.parse('http://mobile.geo4.pro/bot/releaseBuilder/jobStates')
 				data = {'alias': projectAlias, 'cmd': cmd, 'state': state}
 
 				if message != nil
