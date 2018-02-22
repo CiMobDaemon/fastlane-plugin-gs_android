@@ -3,13 +3,7 @@ module Fastlane
     class GsAndroidReleaseAction < Action
       def self.run(params)
         version_name = Helper::VersionWorker.get_rc_version_name(ENV['alias']).ignore_build.to_s
-        Helper::GooglePlayLoader.update_changelog(ENV['alias'],
-                                                  ENV['app_id'],
-                                                  version_name,
-                                                  'beta',
-                                                  ENV['locales'],
-                                                  ENV['json_key_file'])
-
+        
         Helper::GsAndroidHelper.run_action(Actions::SupplyAction,
                                            track: 'beta',
                                            track_promote_to: 'production',
@@ -17,6 +11,13 @@ module Fastlane
                                            skip_upload_metadata: true,
                                            skip_upload_images: true,
                                            skip_upload_screenshots: true)
+        
+        Helper::GooglePlayLoader.update_changelog(ENV['alias'],
+                                                  ENV['app_id'],
+                                                  version_name,
+                                                  'production',
+                                                  ENV['locales'],
+                                                  ENV['json_key_file'])
 
         Helper::VersionWorker.save_release_version_name(ENV['alias'])
       end
