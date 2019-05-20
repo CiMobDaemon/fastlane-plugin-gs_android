@@ -72,6 +72,7 @@ module Fastlane
 			end
 
 			def self.load_changelog(project_alias, version_name, version_code, locales, version_code_prefixes = nil)
+				UI.message("Loading changelog for #{project_alias} #{version_code} #{locales} #{version_code_prefixes}")
 				locales.split(',').each do |locale|
 					lang = locale.split('-')[0].strip.capitalize
 					country = locale.strip
