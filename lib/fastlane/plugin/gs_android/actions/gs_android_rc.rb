@@ -2,7 +2,7 @@ module Fastlane
   module Actions
     class GsAndroidRcAction < Action
       def self.run(params)
-        UI.message("RcAction with .env = #{ENV}")
+        UI.message("RcAction with json_key_file = #{ENV['json_key_file']}")
 
 				version_code = Helper::VersionWorker.increment_version_code(ENV['alias'],
                                                                     ENV['build_gradle_file_path']).to_s
