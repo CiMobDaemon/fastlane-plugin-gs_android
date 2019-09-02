@@ -88,13 +88,13 @@ module Fastlane
 					text = FileHelper.read(notes_file_path)
           post_fix = ""
           if text.length > 500
-            if lang.eql?("en-US")
+            if lang.eql?("En")
               post_fix="...\nMore details in the app"
             end
-            if lang.eql?("ru-RU")
+            if lang.eql?("Ru")
               post_fix="...\nПодробнее в приложении"
             end
-            if lang.eql?("de-DE")
+            if lang.eql?("De")
               post_fix="...\nDetails in der App"
             end
             text = text[0..464] + post_fix
