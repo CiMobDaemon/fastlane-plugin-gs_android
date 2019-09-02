@@ -85,13 +85,20 @@ module Fastlane
 
 					generate_release_notes('fileClosed', project_alias, version_name, lang)
 
-          post_fix = case lang
-                        when "en-US" "...\nMore details in the app"
-                        when "ru-RU" "...\nПодробнее в приложении"
-                        when "de-DE" "...\nDetails in der App"
-                     end
-
-					text = FileHelper.read(notes_file_path)[0..464] + post_fix
+					text = FileHelper.read(notes_file_path)
+          post_fix = ""
+          if text.length > 500
+            if lang.eql?("en-US")
+              post_fix="...\nMore details in the app"
+            end
+            if lang.eql?("ru-RU")
+              post_fix="...\nПодробнее в приложении"
+            end
+            if lang.eql?("de-DE")
+              post_fix="...\nDetails in der App"
+            end
+            text = text[0..464] + post_fix
+          end
 
 					unless version_code_prefixes.nil?
 							version_code_prefixes = version_code_prefixes.split(',')
