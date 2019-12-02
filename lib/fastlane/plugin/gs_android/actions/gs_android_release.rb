@@ -9,7 +9,8 @@ module Fastlane
                                            skip_upload_apk: true,
                                            skip_upload_metadata: true,
                                            skip_upload_images: true,
-                                           skip_upload_screenshots: true)
+                                           skip_upload_screenshots: true,
+                                           skip_upload_changelogs:true)
         version_name = Helper::VersionWorker.get_rc_version_name(ENV['alias']).ignore_build.to_s
         UI.message('SupplyAction complete. Start update_changelog for version_name = ' + version_name)        
         Helper::GooglePlayLoader.update_changelog(ENV['alias'],
