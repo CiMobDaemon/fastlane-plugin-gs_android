@@ -2,7 +2,7 @@ module Fastlane
   module Actions
     class GsAndroidReleaseAction < Action
       def self.run(params)
-        UI.message('ReleaseAction with params = ' + params + ' started for ' + ENV['alias'])
+        UI.message('ReleaseAction started for ' + ENV['alias'])
         Helper::GsAndroidHelper.run_action(Actions::SupplyAction,
                                            track: 'beta',
                                            track_promote_to: 'production',
