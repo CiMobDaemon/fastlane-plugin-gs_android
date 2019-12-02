@@ -2,6 +2,7 @@ module Fastlane
   module Actions
     class GsAndroidReleaseAction < Action
       def self.run(params)
+        UI.important(' Release action started for ' + ENV['alias'])
         version_name = Helper::VersionWorker.get_rc_version_name(ENV['alias']).ignore_build.to_s
         
         Helper::GsAndroidHelper.run_action(Actions::SupplyAction,
