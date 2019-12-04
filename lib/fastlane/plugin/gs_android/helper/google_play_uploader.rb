@@ -4,46 +4,43 @@ module Fastlane
 
       def self.update_changelog(projectAlias, package_name, version_name, track, locales, json_key_file_path)
         require 'googleauth'
-				require 'google/apis/androidpublisher_v2'
+		require 'google/apis/androidpublisher_v3'
+  
 
-				UI.message("Starting upload changelog on google play for package #{package_name} version name #{version_name} and track - #{track}")
+		UI.message("Starting upload changelog on google play for package #{package_name} version name #{version_name} and track - #{track}")
 
-				#Google api authorization
-				scope = Google::Apis::AndroidpublisherV2::AUTH_ANDROIDPUBLISHER
-				key_io = File.open(File.expand_path(json_key_file_path))
-				auth_client = Google::Auth::ServiceAccountCredentials.make_creds(json_key_io: key_io, scope: scope)
-				auth_client.fetch_access_token!
-				android_publisher = Google::Apis::AndroidpublisherV2::AndroidPublisherService.new
-				android_publisher.authorization = auth_client
+		#Google api authorization
+		scope = Google::Apis::AndroidpublisherV3::AUTH_ANDROIDPUBLISHER
+		key_io = File.open(File.expand_path(json_key_file_path))
+		auth_client = Google::Auth::ServiceAccountCredentials.make_creds(json_key_io: key_io, scope: scope)
+		auth_client.fetch_access_token!
+		android_publisher = Google::Apis::AndroidpublisherV3::AndroidPublisherService.new
+		android_publisher.authorization = auth_client
 
-				#create edit
-				current_edit = android_publisher.insert_edit(package_name)
+		#create edit
+		current_edit = android_publisher.insert_edit(package_name)
 
-				#get version codes
-				version_codes = android_publisher.get_track(package_name, current_edit.id, track).version_codes
+		#get version codes
+		version_codes = android_publisher.get_edit_track(package_name, current_edit.id, track).version_codes
 
-				version_codes.each do |version_code|
-          UI.message("Uploading for version code #{version_code}")
-					Helper::GsAndroidHelper.load_changelog(projectAlias, version_name, version_code, locales)
+		version_codes.each do |version_code|
+	      	UI.message("Uploading for version code #{version_code}")
+			Helper::GsAndroidHelper.load_changelog(projectAlias, version_name, version_code, locales)
 
-					locales.split(",").each do |locale|
-						language = locale.strip
+			locales.split(",").each do |locale|
+				language = locale.strip
 
-						#read changelog
-						changelog = FileHelper.read(Helper::GsAndroidHelper::CHANGELOG_PATH_TEMPLATE % {Dir: Dir.pwd, country: language, version_code: version_code})
+				#read changelog
+				changelog = FileHelper.read(Helper::GsAndroidHelper::CHANGELOG_PATH_TEMPLATE % {Dir: Dir.pwd, country: language, version_code: version_code})
 
-						apk_listing_object = Google::Apis::AndroidpublisherV2::ApkListing.new({
-																																language: language,
-																																recent_changes: changelog
-																														})
-						#Update changelog for existing
-						android_publisher.update_apk_listing(package_name, current_edit.id, version_code, language, apk_listing_object)
-					end
-				end
+				#Update changelog for existing
+				Supply::ReleaseListing.new(track, version_name, version_code, language, changelog)
+			end
+		end
 
-				#commit edit
-				android_publisher.commit_edit(package_name, current_edit.id)
-				UI.message('Upload succesfully')
+		#commit edit
+		android_publisher.commit_edit(package_name, current_edit.id)
+		UI.message('Upload succesfully')
       end
     end
   end
