@@ -16,15 +16,15 @@ module Fastlane
 					ENV['locales'],
 				ENV['version_code_prefix'])
 
-				gradle(task: "clean")
+				Fastlane::Actions::GradleAction.run(task: "clean")
 
 				if ENV['flavor'].nil?
-					gradle(
+					Fastlane::Actions::GradleAction.run(
 						task: "assemble",
 						build_type: "Release"
 					)
 				else
-					gradle(
+					Fastlane::Actions::GradleAction.run(
 						task: "assemble",
 						flavor: ENV['flavor'],
 						build_type: "Release"
