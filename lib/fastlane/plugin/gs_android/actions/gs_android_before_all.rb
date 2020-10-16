@@ -6,12 +6,10 @@ module Fastlane
         system ('rm -rf Appfile')
         Helper::FileHelper.write(Dir.pwd + '/Appfile', "json_key_file \"#{ENV['json_key_file']}\"\npackage_name \"#{ENV['app_id']}\"")
         unless ENV['metadata_dir'].nil?
-          UI.message('ENV metadata_dir = '+ENV['metadata_dir'])
-          UI.message('Current dir = '+__dir__)
-          system ('rm -rf metadata')
+          UI.message('metadata dir will be replaced by '+ENV['metadata_dir'])
+          system ('rm -rf fastlane/metadata')
           system ('ls -la')
-          system ("mv #{ENV['metadata_dir']} metadata")
-          UI.important('Use custom ITC metadata.')
+          system ("mv fastlane/#{ENV['metadata_dir']} fastlane/metadata")
         end
       end
 
