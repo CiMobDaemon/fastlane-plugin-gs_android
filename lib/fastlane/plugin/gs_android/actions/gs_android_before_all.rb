@@ -8,7 +8,6 @@ module Fastlane
         unless ENV['metadata_dir'].nil?
           UI.message('metadata dir will be replaced by '+ENV['metadata_dir'])
           system ('rm -rf fastlane/metadata')
-          system ('ls -la')
           system ("mv fastlane/#{ENV['metadata_dir']} fastlane/metadata")
         end
       end
