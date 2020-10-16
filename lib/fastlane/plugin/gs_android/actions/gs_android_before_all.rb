@@ -9,6 +9,7 @@ module Fastlane
           UI.message('ENV metadata_dir = '+ENV['metadata_dir'])
           UI.message('Current dir = '+__dir__)
           system ('rm -rf metadata')
+          system ('ls -la')
           system ("mv #{ENV['metadata_dir']} metadata")
           UI.important('Use custom ITC metadata.')
         end
