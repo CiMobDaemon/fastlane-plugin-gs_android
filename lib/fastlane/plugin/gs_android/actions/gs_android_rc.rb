@@ -21,12 +21,12 @@ module Fastlane
 
 				UI.message("execute gradle assemble")
 				if ENV['flavor'].nil?
-					Fastlane::Actions::GradleAction.run(
+					other_action.gradle(
 						task: "assemble",
 						build_type: "Release"
 					)
 				else
-					Fastlane::Actions::GradleAction.run(
+					other_action.gradle(
 						task: "assemble",
 						flavor: ENV['flavor'],
 						build_type: "Release"
