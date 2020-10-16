@@ -16,10 +16,6 @@ module Fastlane
 					ENV['locales'],
 				ENV['version_code_prefix'])
 
-				UI.message("execute gradle clean")
-				other_action.gradle(task: "clean")
-
-				UI.message("execute gradle assemble")
 				if ENV['flavor'].nil?
 					other_action.gradle(
 						task: "assemble",
