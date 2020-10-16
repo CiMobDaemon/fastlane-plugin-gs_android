@@ -17,8 +17,7 @@ module Fastlane
 				ENV['version_code_prefix'])
 
 				UI.message("execute gradle clean")
-				Helper::GsAndroidHelper.run_action(Actions::GradleAction,
-                                           task: 'clean')
+				other_action.gradle(task: 'clean')
 
 				UI.message("execute gradle assemble")
 				if ENV['flavor'].nil?
