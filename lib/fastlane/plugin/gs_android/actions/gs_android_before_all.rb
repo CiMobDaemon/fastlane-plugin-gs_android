@@ -6,6 +6,7 @@ module Fastlane
         system ('rm -rf Appfile')
         Helper::FileHelper.write(Dir.pwd + '/Appfile', "json_key_file \"#{ENV['json_key_file']}\"\npackage_name \"#{ENV['app_id']}\"")
         unless ENV['metadata_dir'].nil?
+          UI.message('ENV metadata_dir = '+ENV['metadata_dir'])
           system ('rm -rf metadata')
           system ("mv #{ENV['metadata_dir']} metadata")
           UI.important('Use custom ITC metadata.')
